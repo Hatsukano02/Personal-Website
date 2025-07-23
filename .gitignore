@@ -1,0 +1,95 @@
+# 系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# SSH密钥和敏感配置
+SSH_Key
+SSH_Key.pub
+VPS_Config.txt
+
+# 环境变量文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 依赖目录
+node_modules/
+*/node_modules/
+
+# 构建输出
+.next/
+dist/
+build/
+*/dist/
+*/build/
+*/.next/
+
+# 日志文件
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+strapi_startup.log
+
+# 缓存目录
+.npm
+.yarn/cache/
+.cache/
+.parcel-cache/
+
+# IDE和编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 临时文件
+.tmp/
+*.tmp
+*.temp
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+.tmp/data.db
+
+# Strapi特定文件
+.strapi-updater.json
+*/public/uploads/*
+!*/public/uploads/.gitkeep
+
+# 备份文件
+*.backup
+*.bak
+
+# 压缩文件
+*.zip
+*.tar.gz
+*.rar
+
+# 测试覆盖率
+coverage/
+*.lcov
+
+# 文档生成
+docs/build/
+
+# 操作系统
+.AppleDouble
+.LSOverride
+Icon?
+
+# 其他
+*.pid
+*.seed
+*.pid.lock
