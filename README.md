@@ -2,7 +2,7 @@
 
 # 🌟 Hatsukano的个人网站
 
-*一个现代化的个人作品集，展示我的技术、摄影、音乐和生活*
+*一个现代化的个人作品集，关于我的技术、摄影、音乐和生活*
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
 ![Strapi](https://img.shields.io/badge/Strapi-5-blue?style=flat-square&logo=strapi)
@@ -15,11 +15,11 @@
 
 ## 💫 项目简介
 
-这是我的个人网站项目，一个集技术展示、摄影作品、博客文章、音乐和电影收藏于一体的现代化作品集。采用最新的 Web 技术栈，注重用户体验和视觉效果。
+个人网站项目，一个集技术展示、摄影作品、博客文章、音乐和电影收藏于一体的现代化作品集。采用最新的 Web 技术栈，注重用户体验和视觉效果。
 
 ## ✨ 主要特色
 
-🎨 **现代设计** - 基于 Next.js 15 和 Tailwind CSS 4 的响应式设计  
+🎨 **现代设计** - 基于 Next.js 22 和 Tailwind CSS 5 的响应式设计  
 ⚡ **高性能** - 图片优化、代码分割、懒加载等性能优化  
 🎬 **动画效果** - GSAP + Framer Motion 带来流畅的交互体验  
 📱 **移动友好** - 移动端优先的设计理念  
