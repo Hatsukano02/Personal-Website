@@ -1,11 +1,11 @@
 <div align="center">
 
-# 🌟 李翔的个人网站
+# 🌟 Hatsukano 个人网站
 
-*一个现代化的个人作品集，展示我的技术、摄影、音乐和生活*
+*个人作品集网站，集技术、摄影、音乐和生活于一体*
 
-![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
-![Strapi](https://img.shields.io/badge/Strapi-5-blue?style=flat-square&logo=strapi)
+![Next.js](https://img.shields.io/badge/Next.js-15.4.3-black?style=flat-square&logo=next.js)
+![Strapi](https://img.shields.io/badge/Strapi-5.19.0-blue?style=flat-square&logo=strapi)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
 ![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?style=flat-square&logo=tailwindcss)
 
@@ -15,16 +15,16 @@
 
 ## 💫 项目简介
 
-这是我的个人网站项目，一个集技术展示、摄影作品、博客文章、音乐和电影收藏于一体的现代化作品集。采用最新的 Web 技术栈，注重用户体验和视觉效果。
+基于 Next.js 和 Strapi 的全栈个人网站，包含技术项目展示、摄影作品、博客文章、音乐和电影收藏等模块。
 
-## ✨ 主要特色
+## ✨ 特性
 
-🎨 **现代设计** - 基于 Next.js 15 和 Tailwind CSS 4 的响应式设计  
-⚡ **高性能** - 图片优化、代码分割、懒加载等性能优化  
-🎬 **动画效果** - GSAP + Framer Motion 带来流畅的交互体验  
-📱 **移动友好** - 移动端优先的设计理念  
-🔒 **安全可靠** - 完整的安全配置和 CORS 设置  
-📊 **内容管理** - 基于 Strapi CMS 的灵活内容管理系统  
+🎨 **响应式设计** - Next.js 15 + Tailwind CSS 4  
+⚡ **性能优化** - 图片优化、代码分割、懒加载  
+🎬 **动画交互** - GSAP + Framer Motion  
+📱 **移动适配** - 移动端优先设计  
+🔒 **安全配置** - CORS、安全头部设置  
+📊 **内容管理** - Strapi CMS 后台管理  
 
 ## 🛠️ 技术栈
 
@@ -37,27 +37,32 @@
 <tr>
 <td>
 
-- Next.js 15 (App Router)
-- TypeScript
+- Next.js 15.4.3
+- React 19.1.0
+- TypeScript 5
 - Tailwind CSS 4
-- GSAP + Framer Motion
-- Zustand + React Query
+- GSAP 3.13.0
+- Framer Motion 12.23.7
+- Zustand 5.0.6
+- React Query 5.83.0
 
 </td>
 <td>
 
 - Strapi 5.19.0
-- PostgreSQL
-- 本地文件存储
-- RESTful + GraphQL API
+- Node.js 22.17.1
+- PostgreSQL 15.13
+- SQLite (开发环境)
+- RESTful + GraphQL
 
 </td>
 <td>
 
 - 搬瓦工 VPS
 - Rocky Linux 9
-- Nginx + PM2
-- Let's Encrypt SSL
+- Nginx 1.20.1+
+- PM2 6.0.8
+- Redis 8.0.3
 
 </td>
 </tr>
@@ -65,23 +70,25 @@
 
 ## 🎯 网站内容
 
-### 🏠 主页分段展示
-- **Hero** - 欢迎动画和个人介绍
-- **About** - 关于我和技能展示  
-- **Projects** - 技术项目作品集
-- **Photography** - 摄影作品展示
-- **Blog** - 最新文章和思考
-- **Music** - 音乐专辑收藏
-- **Movies** - 影视作品推荐
-- **Media** - 视频音频作品
-- **Links** - 社交媒体链接
+### 🏠 主页分段
+
+- **Hero** - 开场动画
+- **About** - 个人简介和技能
+- **Projects** - 技术项目展示
+- **Photography** - 摄影作品
+- **Blog** - 文章预览
+- **Music** - 音乐收藏
+- **Movies** - 影视收藏
+- **Media** - 视频音频
+- **Links** - 社交链接
 - **Contact** - 联系方式
 
-### 📝 内容特色
-- **博客系统** - 支持 Markdown 的文章发布
-- **项目展示** - 技术栈、截图、代码链接
+### 📝 功能模块
+
+- **博客系统** - Markdown 文章发布
+- **项目展示** - 技术栈、截图、链接
 - **摄影作品** - EXIF 数据、标签分类
-- **媒体收藏** - 音乐、电影评分和评论
+- **媒体收藏** - 评分和评论系统
 - **文件管理** - 图片优化和多格式支持
 
 ## 🚧 开发进度
