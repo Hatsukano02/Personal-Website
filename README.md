@@ -1,202 +1,110 @@
-# 李翔的个人网站
+<div align="center">
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.4.3-black?logo=next.js)](https://nextjs.org)
-[![Strapi](https://img.shields.io/badge/Strapi-5.19.0-blue?logo=strapi)](https://strapi.io)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.1.11-06B6D4?logo=tailwindcss)](https://tailwindcss.com)
+# 🌟 李翔的个人网站
 
-> 一个现代化的个人作品集网站，展示技术项目、摄影作品、博客文章、音乐和电影收藏。
+*一个现代化的个人作品集，展示我的技术、摄影、音乐和生活*
 
-## ✨ 特性
+![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
+![Strapi](https://img.shields.io/badge/Strapi-5-blue?style=flat-square&logo=strapi)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
+![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?style=flat-square&logo=tailwindcss)
 
-- 🎨 **现代化设计** - 基于 Next.js 15 和 Tailwind CSS 4 的响应式设计
-- ⚡ **高性能** - 图片优化、代码分割、懒加载等性能优化
-- 🎬 **动画效果** - GSAP + Framer Motion 实现流畅的交互动画
-- 📱 **移动友好** - 移动端优先的响应式设计
-- 🔐 **安全可靠** - 完整的安全配置和 CORS 设置
-- 📊 **内容管理** - 基于 Strapi CMS 的灵活内容管理
-- 🚀 **生产就绪** - 完整的部署配置和监控
+</div>
+
+---
+
+## 💫 项目简介
+
+这是我的个人网站项目，一个集技术展示、摄影作品、博客文章、音乐和电影收藏于一体的现代化作品集。采用最新的 Web 技术栈，注重用户体验和视觉效果。
+
+## ✨ 主要特色
+
+🎨 **现代设计** - 基于 Next.js 15 和 Tailwind CSS 4 的响应式设计  
+⚡ **高性能** - 图片优化、代码分割、懒加载等性能优化  
+🎬 **动画效果** - GSAP + Framer Motion 带来流畅的交互体验  
+📱 **移动友好** - 移动端优先的设计理念  
+🔒 **安全可靠** - 完整的安全配置和 CORS 设置  
+📊 **内容管理** - 基于 Strapi CMS 的灵活内容管理系统  
 
 ## 🛠️ 技术栈
 
-### 前端
-- **框架**: Next.js 15 (App Router)
-- **语言**: TypeScript
-- **样式**: Tailwind CSS 4
-- **动画**: GSAP + Framer Motion
-- **状态管理**: Zustand + React Query
-- **图标**: 自定义 SVG 图标
+<table>
+<tr>
+<td><strong>前端</strong></td>
+<td><strong>后端</strong></td>
+<td><strong>部署</strong></td>
+</tr>
+<tr>
+<td>
 
-### 后端
-- **CMS**: Strapi 5.19.0
-- **数据库**: PostgreSQL (生产) / SQLite (开发)
-- **文件存储**: 本地文件系统 + 图片优化
-- **API**: RESTful + GraphQL
+- Next.js 15 (App Router)
+- TypeScript
+- Tailwind CSS 4
+- GSAP + Framer Motion
+- Zustand + React Query
 
-### 部署
-- **服务器**: 搬瓦工 VPS (Rocky Linux 9)
-- **Web服务**: Nginx 反向代理
-- **进程管理**: PM2
-- **SSL**: Let's Encrypt (计划中)
+</td>
+<td>
 
-## 📁 项目结构
+- Strapi 5.19.0
+- PostgreSQL
+- 本地文件存储
+- RESTful + GraphQL API
 
-```
-PersonalWebsite/
-├── frontend/                    # Next.js 前端应用
-│   ├── src/
-│   │   ├── app/                # App Router 页面
-│   │   ├── components/         # React 组件
-│   │   │   ├── ui/            # 基础 UI 组件
-│   │   │   ├── sections/      # 页面区块组件
-│   │   │   └── layouts/       # 布局组件
-│   │   ├── lib/               # 工具库
-│   │   │   ├── api/          # API 客户端
-│   │   │   └── utils/        # 工具函数
-│   │   └── types/            # TypeScript 类型定义
-├── backend/                     # Strapi 后端应用
-│   ├── src/                    # Strapi 源码
-│   ├── config/                # 配置文件
-│   └── public/uploads/        # 文件上传目录
-├── docs/                       # 项目文档
-│   ├── production-environment.md  # 生产环境配置
-│   ├── session-handoff.md     # 开发状态快照
-│   └── todo.md                # 任务管理
-└── Project_Management_Doc/     # 架构设计文档
-```
+</td>
+<td>
 
-## 🚀 快速开始
+- 搬瓦工 VPS
+- Rocky Linux 9
+- Nginx + PM2
+- Let's Encrypt SSL
 
-### 环境要求
+</td>
+</tr>
+</table>
 
-- Node.js 22.17.1
-- npm 10.9.2+
-- PostgreSQL 15+ (生产环境)
+## 🎯 网站内容
 
-### 本地开发
-
-1. **克隆项目**
-   ```bash
-   git clone https://github.com/Hatsukano02/Personal-Website.git
-   cd Personal-Website
-   ```
-
-2. **安装依赖**
-   ```bash
-   # 安装前端依赖
-   cd frontend
-   npm install
-
-   # 安装后端依赖
-   cd ../backend
-   npm install
-   ```
-
-3. **配置环境变量**
-   ```bash
-   # 后端环境配置
-   cd backend
-   cp env.example .env
-   # 编辑 .env 文件，配置数据库等信息
-   ```
-
-4. **启动开发服务**
-   ```bash
-   # 启动后端 (端口 1337)
-   cd backend
-   npm run develop
-
-   # 启动前端 (端口 3000)
-   cd frontend
-   npm run dev
-   ```
-
-5. **访问应用**
-   - 前端应用: http://localhost:3000
-   - Strapi 管理后台: http://localhost:1337/admin
-
-## 📚 主要功能
-
-### 🏠 主页分段
-- **Hero Section** - 开场动画和欢迎信息
-- **About** - 个人简介和技能展示
+### 🏠 主页分段展示
+- **Hero** - 欢迎动画和个人介绍
+- **About** - 关于我和技能展示  
 - **Projects** - 技术项目作品集
 - **Photography** - 摄影作品展示
-- **Blog** - 最新文章预览
+- **Blog** - 最新文章和思考
 - **Music** - 音乐专辑收藏
 - **Movies** - 影视作品推荐
 - **Media** - 视频音频作品
 - **Links** - 社交媒体链接
 - **Contact** - 联系方式
 
-### 📝 内容管理
+### 📝 内容特色
 - **博客系统** - 支持 Markdown 的文章发布
-- **项目展示** - 技术栈、截图、链接管理
+- **项目展示** - 技术栈、截图、代码链接
 - **摄影作品** - EXIF 数据、标签分类
 - **媒体收藏** - 音乐、电影评分和评论
 - **文件管理** - 图片优化和多格式支持
 
-## 🔧 开发命令
+## 🚧 开发进度
 
-### 前端命令
-```bash
-npm run dev          # 启动开发服务器
-npm run build        # 构建生产版本
-npm run start        # 启动生产服务器
-npm run lint         # 代码检查
 ```
+📅 项目时间线
 
-### 后端命令
-```bash
-npm run develop      # 启动开发模式
-npm run build        # 构建管理后台
-npm run start        # 启动生产模式
-strapi console       # Strapi 控制台
+✅ 2025.01 - 项目架构设计
+✅ 2025.01 - 前后端基础配置
+✅ 2025.01 - TypeScript 类型系统
+🔄 2025.01 - 内容类型创建 (进行中)
+📋 2025.02 - 主页布局实现 (计划中)
+📋 2025.02 - 动画效果开发 (计划中)
+📋 2025.03 - 内容管理系统 (计划中)
+📋 2025.03 - 性能优化和部署 (计划中)
 ```
-
-## 📖 文档
-
-- [生产环境配置](docs/production-environment.md) - 完整的环境配置指南
-- [开发指南](CLAUDE.md) - Claude Code 开发指导
-- [架构设计](Project_Management_Doc/) - 详细的架构设计文档
-- [任务管理](docs/todo.md) - 开发进度追踪
-
-## 🚧 开发状态
-
-### ✅ 已完成
-- [x] 项目架构设计和文档
-- [x] 前后端基础配置
-- [x] TypeScript 类型系统
-- [x] API 客户端封装
-- [x] 开发环境搭建
-- [x] 生产环境配置
-
-### 🔄 进行中
-- [ ] Strapi 内容类型创建
-- [ ] 主页布局实现
-- [ ] 基础组件开发
-
-### 📋 计划中
-- [ ] 动画效果实现
-- [ ] 博客系统开发
-- [ ] 摄影作品展示
-- [ ] 性能优化
-- [ ] SEO 配置
-- [ ] 部署上线
-
-## 🤝 贡献
-
-这是一个个人项目，欢迎提出建议和反馈！
-
-## 📄 许可证
-
-MIT License - 详见 [LICENSE](LICENSE) 文件
-
-## 📞 联系方式
-
-- **GitHub**: [@Hatsukano02](https://github.com/Hatsukano02)
-- **Email**: 你的邮箱地址
 
 ---
 
-**注意**: 本项目正在积极开发中，部分功能可能尚未完成。
+<div align="center">
+
+**项目持续开发中** 🚀
+
+*如有问题或建议，请发邮件至 manunkindlee@gmail.com*
+
+</div>
