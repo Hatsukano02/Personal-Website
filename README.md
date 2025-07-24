@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🌟 Hatsukano 个人网站
+# 🌟 Hatsukano的个人网站
 
-*个人作品集网站，集技术、摄影、音乐和生活于一体*
+*一个现代化的个人作品集，关于我的技术、摄影、音乐和生活*
 
 ![Next.js](https://img.shields.io/badge/Next.js-15.4.3-black?style=flat-square&logo=next.js)
 ![Strapi](https://img.shields.io/badge/Strapi-5.19.0-blue?style=flat-square&logo=strapi)
@@ -15,16 +15,16 @@
 
 ## 💫 项目简介
 
-基于 Next.js 和 Strapi 的全栈个人网站，包含技术项目展示、摄影作品、博客文章、音乐和电影收藏等模块。
+个人网站项目，一个集技术展示、摄影作品、博客文章、音乐和电影收藏于一体的现代化作品集。采用最新的 Web 技术栈，注重用户体验和视觉效果。
 
 ## ✨ 特性
 
-🎨 **响应式设计** - Next.js 15 + Tailwind CSS 4  
-⚡ **性能优化** - 图片优化、代码分割、懒加载  
-🎬 **动画交互** - GSAP + Framer Motion  
-📱 **移动适配** - 移动端优先设计  
-🔒 **安全配置** - CORS、安全头部设置  
-📊 **内容管理** - Strapi CMS 后台管理  
+🎨 **现代设计** - 基于 Next.js 15.4.3 和 Tailwind CSS 4 的响应式设计  
+⚡ **高性能** - 图片优化、代码分割、懒加载等性能优化  
+🎬 **动画效果** - GSAP + Framer Motion 带来流畅的交互体验  
+📱 **移动友好** - 移动端优先的设计理念  
+🔒 **安全可靠** - 完整的安全配置和 CORS 设置  
+📊 **内容管理** - 基于 Strapi CMS 的灵活内容管理系统
 
 ## 🛠️ 技术栈
 
