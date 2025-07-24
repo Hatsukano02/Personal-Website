@@ -1,13 +1,14 @@
 # 后端架构方案
 
 ## 技术栈选择
-- **CMS框架**: Strapi 4.x (自托管)
-- **数据库**: PostgreSQL 15+
-- **文件存储**: 本地文件系统 + 自建CDN
-- **图片处理**: Sharp + ImageMagick
+- **CMS框架**: Strapi 5.19.0 (自托管)
+- **Node.js环境**: v22.17.1
+- **数据库**: PostgreSQL 15.13
+- **文件存储**: 本地文件系统 + 图片优化
+- **图片处理**: Sharp (内置)
 - **搜索引擎**: PostgreSQL Full-text Search
-- **缓存**: Redis (可选)
-- **部署**: PM2 + Nginx
+- **缓存**: Redis 8.0.3
+- **部署**: PM2 6.0.8 + Nginx 1.20.1+
 
 ## 服务架构设计
 

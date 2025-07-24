@@ -1,13 +1,14 @@
 # 前端架构方案
 
 ## 技术栈配置
-- **框架**: Next.js 15 (App Router)
-- **语言**: TypeScript
-- **样式**: Tailwind CSS + CSS Modules (复杂组件)
-- **状态管理**: Zustand (轻量级) + React Query (服务端状态)
-- **动画库**: GSAP + Framer Motion (详见动效方案)
+- **框架**: Next.js 15.4.3 (App Router)
+- **运行时**: React 19.1.0
+- **语言**: TypeScript 5
+- **样式**: Tailwind CSS 4 + CSS Modules (复杂组件)
+- **状态管理**: Zustand 5.0.6 + React Query 5.83.0
+- **动画库**: GSAP 3.13.0 + Framer Motion 12.23.7
 - **图片处理**: Next/Image + Sharp
-- **开发工具**: Cursor AI + ESLint + Prettier
+- **开发工具**: ESLint + Prettier
 
 ## 项目结构设计
 

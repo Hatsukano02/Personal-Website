@@ -9,11 +9,11 @@
 - 完全数据自主控制
 
 ### 技术选型确认
-- **前端**: Next.js 15 + TypeScript + Tailwind CSS
-- **后端**: Strapi 4.x 自托管
-- **数据库**: PostgreSQL + Redis(可选)
-- **动画**: GSAP + Framer Motion
-- **部署**: 自购VPS + Nginx + PM2
+- **前端**: Next.js 15.4.3 + TypeScript 5 + Tailwind CSS 4
+- **后端**: Strapi 5.19.0 自托管 + Node.js 22.17.1
+- **数据库**: PostgreSQL 15.13 + Redis 8.0.3
+- **动画**: GSAP 3.13.0 + Framer Motion 12.23.7
+- **部署**: 搬瓦工VPS + Nginx 1.20.1+ + PM2 6.0.8
 
 ## 开发阶段规划
 
