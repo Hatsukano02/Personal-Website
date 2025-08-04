@@ -121,7 +121,9 @@ const ThemeControls = ({ className }: ThemeControlsProps) => {
         ref={controlsRef}
         className={cn(
           "bg-light-background-secondary/80 dark:bg-dark-background-secondary/80",
-          "backdrop-blur-md border border-light-border-default dark:border-dark-border-default",
+          "backdrop-blur-md",
+          "border border-light-border-default dark:border-transparent",
+          "dark:shadow-[inset_0_0_0_1px_rgba(248,250,252,0.15),0_10px_15px_-3px_rgba(0,0,0,0.25),0_4px_6px_-2px_rgba(0,0,0,0.15)]",
           "rounded-full p-1.5",
           "shadow-lg dark:shadow-dark-shadow",
           "flex items-center gap-1"
@@ -141,7 +143,7 @@ const ThemeControls = ({ className }: ThemeControlsProps) => {
               "relative flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-colors duration-200",
               "hover:bg-light-background-tertiary/50 dark:hover:bg-dark-background-tertiary/50",
               theme === option.value
-                ? "text-light-primary dark:text-dark-primary bg-light-primary/10 dark:bg-dark-primary/10"
+                ? "text-light-text-primary dark:text-white"
                 : "text-light-text-secondary dark:text-dark-text-secondary"
             )}
             style={{
