@@ -209,7 +209,7 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
       const distanceX = Math.abs(e.clientX - centerX);
       const distanceY = Math.abs(e.clientY - centerY);
 
-      const maxDistanceX = 350;
+      const maxDistanceX = 550;
       const maxDistanceY = 150;
 
       const normalizedX = distanceX / maxDistanceX;
@@ -370,8 +370,10 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
                 style={{
                   width: `${ITEM_WIDTH}px`,
                   justifyContent: "center",
-                  transform: hoveredItemIndex === index ? "scale(1.1)" : "scale(1)",
-                  transition: "all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                  transform:
+                    hoveredItemIndex === index ? "scale(1.1)" : "scale(1)",
+                  transition:
+                    "all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
                 }}
               >
                 <Icon
@@ -382,7 +384,8 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
                       : "text-light-text-secondary dark:text-dark-text-secondary group-hover:text-light-text-primary dark:group-hover:text-dark-text-primary"
                   )}
                   style={{
-                    transform: hoveredItemIndex === index ? "scale(1.05)" : "scale(1)",
+                    transform:
+                      hoveredItemIndex === index ? "scale(1.05)" : "scale(1)",
                     transition: "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                   }}
                 />
@@ -396,7 +399,8 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
                   style={{
                     fontSize: `${scale.fontSize}px`,
                     fontVariationSettings: `"wght" ${scale.fontWeight}, "wdth" ${scale.fontWidth}`,
-                    transform: hoveredItemIndex === index ? "scale(1.05)" : "scale(1)",
+                    transform:
+                      hoveredItemIndex === index ? "scale(1.05)" : "scale(1)",
                     transition: "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                   }}
                 >
