@@ -15,17 +15,33 @@ const THEME_OPTIONS: ThemeOption[] = [
 const ThemeControls = ({ className }: ThemeControlsProps) => {
   const { theme, setTheme } = useTheme();
   const [scale, setScale] = useState(1);
-  const [hoveredOptionIndex, setHoveredOptionIndex] = useState<number | null>(null);
+  const [hoveredOptionIndex, setHoveredOptionIndex] = useState<number | null>(
+    null
+  );
+  const [flashingTheme, setFlashingTheme] = useState<string | null>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
   const animationFrameRef = useRef<number | null>(null);
   const currentScaleRef = useRef(1);
   const targetScaleRef = useRef(1);
 
-
-
   // 处理主题切换
   const handleThemeChange = (newTheme: "light" | "dark" | "auto") => {
     setTheme(newTheme);
+
+    // 只对dark主题触发闪光动画（月亮图标）
+    if (newTheme === "dark") {
+      // 清除之前的动画状态，确保不会有重叠
+      setFlashingTheme(null);
+      
+      // 使用 requestAnimationFrame 确保状态重置后再开始新动画
+      requestAnimationFrame(() => {
+        setFlashingTheme(newTheme);
+        // 2.2秒后清除闪光状态，与CSS动画时间完全匹配
+        setTimeout(() => {
+          setFlashingTheme(null);
+        }, 2200);
+      });
+    }
   };
 
   useEffect(() => {
@@ -133,35 +149,46 @@ const ThemeControls = ({ className }: ThemeControlsProps) => {
           transformOrigin: "center",
         }}
       >
-        {THEME_OPTIONS.map((option, index) => (
-          <button
-            key={option.value}
-            onClick={() => handleThemeChange(option.value)}
-            onMouseEnter={() => setHoveredOptionIndex(index)}
-            onMouseLeave={() => setHoveredOptionIndex(null)}
-            className={cn(
-              "relative flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-colors duration-200",
-              "hover:bg-light-background-tertiary/50 dark:hover:bg-dark-background-tertiary/50",
-              theme === option.value
-                ? "text-light-text-primary dark:text-white"
-                : "text-light-text-secondary dark:text-dark-text-secondary"
-            )}
-            style={{
-              transform: hoveredOptionIndex === index ? "scale(1.1)" : "scale(1)",
-              transition: "all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-            }}
-            aria-label={`Switch to ${option.label} theme`}
-          >
-            <span
+        {THEME_OPTIONS.map((option, index) => {
+          const isActive = theme === option.value;
+          const isDarkTheme = option.value === "dark";
+          const shouldFlash = flashingTheme === option.value && isDarkTheme;
+
+          return (
+            <button
+              key={option.value}
+              onClick={() => handleThemeChange(option.value)}
+              onMouseEnter={() => setHoveredOptionIndex(index)}
+              onMouseLeave={() => setHoveredOptionIndex(null)}
+              className={cn(
+                "relative flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-colors duration-200",
+                "hover:bg-light-background-tertiary/50 dark:hover:bg-dark-background-tertiary/50",
+                isActive
+                  ? "text-light-text-primary dark:text-white"
+                  : "text-light-text-secondary dark:text-dark-text-secondary"
+              )}
               style={{
-                transform: hoveredOptionIndex === index ? "scale(1.05)" : "scale(1)",
-                transition: "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                transform:
+                  hoveredOptionIndex === index ? "scale(1.1)" : "scale(1)",
+                transition: "all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
               }}
+              aria-label={`Switch to ${option.label} theme`}
             >
-              {option.icon}
-            </span>
-          </button>
-        ))}
+              <span
+                className={cn(shouldFlash && "animate-golden-icon-flash")}
+                style={{
+                  transform:
+                    hoveredOptionIndex === index ? "scale(1.05)" : "scale(1)",
+                  transition: shouldFlash 
+                    ? "transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)" 
+                    : "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                }}
+              >
+                {option.icon}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

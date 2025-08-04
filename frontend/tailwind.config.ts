@@ -51,7 +51,10 @@ const config: Config & { safelist?: string[] } = {
         'dark-text-secondary': '#CBD5E1',
         'dark-text-muted': '#94A3B8',
         'dark-border-default': '#F8FAFC',     // 夜间模式：白色边框
-        'dark-border-muted': '#E2E8F0'
+        'dark-border-muted': '#E2E8F0',
+        
+        // 特殊效果颜色
+        'old-gold': '#d9b70d'
       },
       fontFamily: {
         'sans': ['SourceHanSans-VF', 'PingFang SC', 'system-ui', 'sans-serif'],

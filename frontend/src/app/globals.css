@@ -77,6 +77,9 @@ html {
   --dark-primary: #4a8c8c;
   --dark-secondary: #fab062;
   --dark-accent: #011126;
+  
+  /* 特殊效果颜色 */
+  --old-gold: #d9b70d;
   --dark-background-primary: #0F172A;
   --dark-background-secondary: #1E293B;
   --dark-background-tertiary: #334155;
@@ -259,6 +262,25 @@ body {
   opacity: 0;
   animation: fade-in-out 4s ease-in-out forwards;
   animation-delay: 1s;
+}
+
+/* 金色图标闪光动画 */
+@keyframes golden-icon-flash {
+  0% { 
+    filter: drop-shadow(0 0 0px rgba(217, 183, 13, 0));
+  }
+  50% { 
+    filter: drop-shadow(0 0 16px rgba(217, 183, 13, 1)) drop-shadow(0 0 8px rgba(217, 183, 13, 0.8)) drop-shadow(0 0 4px rgba(217, 183, 13, 1));
+  }
+  100% { 
+    filter: drop-shadow(0 0 0px rgba(217, 183, 13, 0));
+  }
+}
+
+.animate-golden-icon-flash {
+  animation: golden-icon-flash 2.2s ease-in-out forwards;
+  /* 确保动画不被其他变换干扰 */
+  animation-fill-mode: both;
 }
 
 /* 减弱动画支持 */
