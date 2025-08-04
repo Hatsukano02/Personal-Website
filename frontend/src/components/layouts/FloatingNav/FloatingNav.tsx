@@ -321,8 +321,9 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
       className={cn(
         "fixed bottom-8 left-1/2 z-50",
         "bg-light-background-secondary/80 dark:bg-dark-background-secondary/80",
-        "backdrop-blur-md border border-light-border-default/20 dark:border-dark-border-default/20",
-        "rounded-full shadow-lg px-4 py-2",
+        "backdrop-blur-md border border-light-border-default dark:border-dark-border-default",
+        "rounded-full px-4 py-2",
+        "shadow-lg dark:shadow-dark-shadow",
         className
       )}
       style={{

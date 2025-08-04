@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Sun, Moon, Monitor } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import type { ThemeControlsProps, ThemeOption } from "./ThemeControls.types";
 
 const THEME_OPTIONS: ThemeOption[] = [
@@ -12,8 +13,7 @@ const THEME_OPTIONS: ThemeOption[] = [
 ];
 
 const ThemeControls = ({ className }: ThemeControlsProps) => {
-  // 设置合理的默认状态，支持 SSR
-  const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
+  const { theme, setTheme } = useTheme();
   const [scale, setScale] = useState(1);
   const [hoveredOptionIndex, setHoveredOptionIndex] = useState<number | null>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
@@ -21,69 +21,11 @@ const ThemeControls = ({ className }: ThemeControlsProps) => {
   const currentScaleRef = useRef(1);
   const targetScaleRef = useRef(1);
 
-  // 客户端初始化，但不阻塞渲染
-  useEffect(() => {
-    // 异步初始化主题，不阻塞渲染
-    const initTheme = async () => {
-      try {
-        // 先从 localStorage 获取，立即更新
-        const savedTheme = localStorage.getItem("theme") as
-          | "light"
-          | "dark"
-          | "auto";
-        if (savedTheme) {
-          setTheme(savedTheme);
-        }
 
-        // 尝试连接 ThemeProvider（仅用于获取模块引用）
-        try {
-          const themeModule = await import(
-            "@/components/providers/ThemeProvider"
-          );
-          console.log("ThemeProvider module loaded", themeModule);
-        } catch (themeError) {
-          console.warn("Failed to import ThemeProvider:", themeError);
-        }
-      } catch (error) {
-        console.warn("Failed to connect to ThemeProvider:", error);
-        // 继续使用 localStorage 状态
-      }
-    };
-
-    initTheme();
-  }, []);
 
   // 处理主题切换
   const handleThemeChange = (newTheme: "light" | "dark" | "auto") => {
     setTheme(newTheme);
-
-    // 只在客户端执行
-    if (typeof window !== "undefined") {
-      localStorage.setItem("theme", newTheme);
-
-      // 手动调用ThemeProvider的方法（如果可用）
-      try {
-        const globalWindow = window as unknown as {
-          __themeProviderSetTheme?: (theme: string) => void;
-        };
-        if (globalWindow.__themeProviderSetTheme) {
-          globalWindow.__themeProviderSetTheme(newTheme);
-        }
-      } catch (error) {
-        console.warn("Failed to use ThemeProvider:", error);
-      }
-
-      // 手动更新 HTML 类
-      const root = document.documentElement;
-      if (newTheme === "auto") {
-        const isDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-        root.classList.toggle("dark", isDark);
-      } else {
-        root.classList.toggle("dark", newTheme === "dark");
-      }
-    }
   };
 
   useEffect(() => {
@@ -179,8 +121,9 @@ const ThemeControls = ({ className }: ThemeControlsProps) => {
         ref={controlsRef}
         className={cn(
           "bg-light-background-secondary/80 dark:bg-dark-background-secondary/80",
-          "backdrop-blur-md border border-light-border-default/20 dark:border-dark-border-default/20",
-          "rounded-full shadow-lg p-1.5",
+          "backdrop-blur-md border border-light-border-default dark:border-dark-border-default",
+          "rounded-full p-1.5",
+          "shadow-lg dark:shadow-dark-shadow",
           "flex items-center gap-1"
         )}
         style={{
@@ -195,7 +138,7 @@ const ThemeControls = ({ className }: ThemeControlsProps) => {
             onMouseEnter={() => setHoveredOptionIndex(index)}
             onMouseLeave={() => setHoveredOptionIndex(null)}
             className={cn(
-              "relative flex items-center justify-center w-9 h-9 rounded-full cursor-pointer",
+              "relative flex items-center justify-center w-9 h-9 rounded-full cursor-pointer transition-colors duration-200",
               "hover:bg-light-background-tertiary/50 dark:hover:bg-dark-background-tertiary/50",
               theme === option.value
                 ? "text-light-primary dark:text-dark-primary bg-light-primary/10 dark:bg-dark-primary/10"

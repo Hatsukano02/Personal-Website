@@ -1,53 +1,57 @@
 import type { Config } from 'tailwindcss'
 
-const config: Config = {
+const config: Config & { safelist?: string[] } = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   darkMode: 'class',
+  safelist: [
+    // 确保自定义颜色被包含在构建中
+    'bg-light-background-primary',
+    'bg-light-background-secondary', 
+    'bg-light-background-tertiary',
+    'bg-dark-background-primary',
+    'bg-dark-background-secondary',
+    'bg-dark-background-tertiary',
+    'text-light-text-primary',
+    'text-light-text-secondary',
+    'text-light-text-muted',
+    'text-dark-text-primary',
+    'text-dark-text-secondary', 
+    'text-dark-text-muted',
+    'border-light-border-default',
+    'border-light-border-muted',
+    'border-dark-border-default',
+    'border-dark-border-muted'
+  ],
   theme: {
     extend: {
       colors: {
-        light: {
-          primary: '#087E8B',
-          secondary: '#C7FFDA',
-          accent: '#0A2342',
-          background: {
-            primary: '#FEFEFE',      // 几乎白色但不是纯白
-            secondary: '#F9FAFB',    // 极浅灰
-            tertiary: '#F3F4F6'      // 浅灰
-          },
-          text: {
-            primary: '#1F2937',      // 深灰而非纯黑
-            secondary: '#94A3B8',    // 更淡的次要文本色
-            muted: '#9CA3AF'
-          },
-          border: {
-            DEFAULT: '#E5E7EB',
-            muted: '#F3F4F6'
-          }
-        },
-        dark: {
-          primary: '#4a8c8c',
-          secondary: '#fab062',
-          accent: '#011126',
-          background: {
-            primary: '#0F172A',      // 深蓝灰而非纯黑
-            secondary: '#1E293B',    // 稍浅的深蓝灰
-            tertiary: '#334155'      // 中等深度蓝灰
-          },
-          text: {
-            primary: '#F8FAFC',      // 几乎白色但不是纯白
-            secondary: '#94A3B8',    // 更淡的次要文本色，与浅色模式统一
-            muted: '#64748B'
-          },
-          border: {
-            DEFAULT: '#475569',
-            muted: '#334155'
-          }
-        }
+        'light-primary': '#087E8B',
+        'light-secondary': '#C7FFDA', 
+        'light-accent': '#0A2342',
+        'light-background-primary': '#FEFEFE',
+        'light-background-secondary': '#F9FAFB',
+        'light-background-tertiary': '#F3F4F6',
+        'light-text-primary': '#1F2937',
+        'light-text-secondary': '#4B5563',
+        'light-text-muted': '#6B7280',
+        'light-border-default': '#1F2937',    // 日间模式：深色边框
+        'light-border-muted': '#374151',
+        
+        'dark-primary': '#4a8c8c',
+        'dark-secondary': '#fab062',
+        'dark-accent': '#011126', 
+        'dark-background-primary': '#0F172A',
+        'dark-background-secondary': '#1E293B',
+        'dark-background-tertiary': '#334155',
+        'dark-text-primary': '#F8FAFC',
+        'dark-text-secondary': '#CBD5E1',
+        'dark-text-muted': '#94A3B8',
+        'dark-border-default': '#F8FAFC',     // 夜间模式：白色边框
+        'dark-border-muted': '#E2E8F0'
       },
       fontFamily: {
         'sans': ['SourceHanSans-VF', 'PingFang SC', 'system-ui', 'sans-serif'],

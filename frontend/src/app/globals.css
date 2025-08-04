@@ -60,6 +60,35 @@ html {
 
 /* CSS变量定义 */
 :root {
+  /* 浅色主题颜色 */
+  --light-primary: #087E8B;
+  --light-secondary: #C7FFDA;
+  --light-accent: #0A2342;
+  --light-background-primary: #FEFEFE;
+  --light-background-secondary: #F9FAFB;
+  --light-background-tertiary: #F3F4F6;
+  --light-text-primary: #1F2937;
+  --light-text-secondary: #4B5563;     /* 更深的灰色，提高对比度 */
+  --light-text-muted: #6B7280;          /* 更深的灰色，提高对比度 */
+  --light-border-default: #1F2937;    /* 日间模式：深色边框 */
+  --light-border-muted: #374151;
+  
+  /* 深色主题颜色 */
+  --dark-primary: #4a8c8c;
+  --dark-secondary: #fab062;
+  --dark-accent: #011126;
+  --dark-background-primary: #0F172A;
+  --dark-background-secondary: #1E293B;
+  --dark-background-tertiary: #334155;
+  --dark-text-primary: #F8FAFC;
+  --dark-text-secondary: #CBD5E1;       /* 更亮的灰色，提高对比度 */
+  --dark-text-muted: #94A3B8;           /* 更亮的灰色，提高对比度 */
+  --dark-border-default: #F8FAFC;     /* 夜间模式：白色边框 */
+  --dark-border-muted: #E2E8F0;
+  
+  /* 阴影定义 */
+  --light-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1);    /* 日间：黑色阴影 */
+  --dark-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15);    /* 夜间：也用黑色阴影，但更重 */
   /* 字体栈 */
   --font-sans: 'SourceHanSans-VF', 'PingFang SC', system-ui, sans-serif;
   --font-serif: 'SourceHanSerif-VF', 'PingFang SC', serif;
@@ -124,6 +153,39 @@ body {
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
+
+/* 主题颜色工具类 */
+.bg-light-background-primary { background-color: var(--light-background-primary); }
+.bg-light-background-secondary { background-color: var(--light-background-secondary); }
+.bg-light-background-tertiary { background-color: var(--light-background-tertiary); }
+.bg-dark-background-primary { background-color: var(--dark-background-primary); }
+.bg-dark-background-secondary { background-color: var(--dark-background-secondary); }
+.bg-dark-background-tertiary { background-color: var(--dark-background-tertiary); }
+
+.text-light-text-primary { color: var(--light-text-primary); }
+.text-light-text-secondary { color: var(--light-text-secondary); }
+.text-light-text-muted { color: var(--light-text-muted); }
+.text-dark-text-primary { color: var(--dark-text-primary); }
+.text-dark-text-secondary { color: var(--dark-text-secondary); }
+.text-dark-text-muted { color: var(--dark-text-muted); }
+
+.border-light-border-default { border-color: var(--light-border-default); }
+.border-light-border-muted { border-color: var(--light-border-muted); }
+.border-dark-border-default { border-color: var(--dark-border-default); }
+.border-dark-border-muted { border-color: var(--dark-border-muted); }
+
+/* 阴影工具类 */
+.shadow-light { box-shadow: var(--light-shadow); }
+.shadow-dark-shadow { box-shadow: var(--dark-shadow); }
+
+/* 响应式深色模式支持 */
+.dark .bg-light-background-primary { background-color: var(--dark-background-primary); }
+.dark .bg-light-background-secondary { background-color: var(--dark-background-secondary); }
+.dark .bg-light-background-tertiary { background-color: var(--dark-background-tertiary); }
+.dark .text-light-text-primary { color: var(--dark-text-primary); }
+.dark .text-light-text-secondary { color: var(--dark-text-secondary); }
+.dark .text-light-text-muted { color: var(--dark-text-muted); }
+
 
 /* 毛玻璃效果 */
 .glass-effect {

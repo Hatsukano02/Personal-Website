@@ -74,7 +74,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // 避免服务端渲染问题
   if (!mounted) {
-    return <>{children}</>
+    return (
+      <ThemeContext.Provider value={{ theme: 'auto', effectiveTheme: 'light', setTheme: () => {} }}>
+        {children}
+      </ThemeContext.Provider>
+    )
   }
 
   return (

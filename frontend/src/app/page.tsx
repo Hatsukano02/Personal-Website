@@ -33,6 +33,7 @@ export default function HomePage() {
     sections: ['hero', 'about', 'projects', 'photography', 'blog', 'music', 'movies', 'media', 'links', 'contact']
   })
 
+
   // 更新导航可见性
   useEffect(() => {
     updateNavVisibility(scrollY, scrollDirection)
@@ -70,6 +71,7 @@ export default function HomePage() {
       ref={containerRef}
       className="relative"
     >
+
       {/* 分段内容 */}
       <HeroSection id="hero" />
       <AboutSection id="about" />
