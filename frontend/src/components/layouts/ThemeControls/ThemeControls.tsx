@@ -15,6 +15,7 @@ const ThemeControls = ({ className }: ThemeControlsProps) => {
   // 设置合理的默认状态，支持 SSR
   const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
   const [scale, setScale] = useState(1);
+  const [hoveredOptionIndex, setHoveredOptionIndex] = useState<number | null>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
   const animationFrameRef = useRef<number | null>(null);
   const currentScaleRef = useRef(1);
@@ -187,22 +188,33 @@ const ThemeControls = ({ className }: ThemeControlsProps) => {
           transformOrigin: "center",
         }}
       >
-        {THEME_OPTIONS.map((option) => (
+        {THEME_OPTIONS.map((option, index) => (
           <button
             key={option.value}
             onClick={() => handleThemeChange(option.value)}
+            onMouseEnter={() => setHoveredOptionIndex(index)}
+            onMouseLeave={() => setHoveredOptionIndex(null)}
             className={cn(
-              "relative flex items-center justify-center w-9 h-9 rounded-full",
-              "transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer",
-              "hover:scale-110 active:scale-95",
+              "relative flex items-center justify-center w-9 h-9 rounded-full cursor-pointer",
               "hover:bg-light-background-tertiary/50 dark:hover:bg-dark-background-tertiary/50",
               theme === option.value
                 ? "text-light-primary dark:text-dark-primary bg-light-primary/10 dark:bg-dark-primary/10"
                 : "text-light-text-secondary dark:text-dark-text-secondary"
             )}
+            style={{
+              transform: hoveredOptionIndex === index ? "scale(1.1)" : "scale(1)",
+              transition: "all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+            }}
             aria-label={`Switch to ${option.label} theme`}
           >
-            {option.icon}
+            <span
+              style={{
+                transform: hoveredOptionIndex === index ? "scale(1.05)" : "scale(1)",
+                transition: "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+              }}
+            >
+              {option.icon}
+            </span>
           </button>
         ))}
       </div>
