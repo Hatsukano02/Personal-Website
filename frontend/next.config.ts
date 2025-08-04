@@ -18,8 +18,9 @@ const nextConfig: NextConfig = {
         pathname: "/uploads/**",
       },
       {
-        protocol: "https",
-        hostname: "你的域名.com",
+        protocol: "http",
+        hostname: "172.96.193.211",
+        port: "1337",
         pathname: "/uploads/**",
       },
     ],
@@ -36,11 +37,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:1337/api/:path*",
+        destination: "http://172.96.193.211:1337/api/:path*",
       },
       {
         source: "/uploads/:path*",
-        destination: "http://localhost:1337/uploads/:path*",
+        destination: "http://172.96.193.211:1337/uploads/:path*",
       },
     ];
   },
@@ -53,8 +54,9 @@ const nextConfig: NextConfig = {
 
   // 环境变量
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337",
-    NEXT_PUBLIC_APP_NAME: "李翔的个人网站",
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "http://172.96.193.211:1337",
+    NEXT_PUBLIC_MEDIA_URL: process.env.NEXT_PUBLIC_MEDIA_URL || "http://172.96.193.211:1337",
+    NEXT_PUBLIC_APP_NAME: "Li Xiang - Full Stack Developer",
   },
 
   // TypeScript配置

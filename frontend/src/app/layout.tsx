@@ -1,38 +1,37 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { Inter } from 'next/font/google'
+import { Metadata } from 'next'
+import { ThemeProvider } from '@/components/providers/ThemeProvider'
+import { QueryProvider } from '@/components/providers/QueryProvider'
+import '@/app/globals.css'
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter'
+})
 
 export const metadata: Metadata = {
   title: {
-    default: "李翔的个人网站",
-    template: "%s | 李翔的个人网站"
+    default: 'Li Xiang - Full Stack Developer',
+    template: '%s | Li Xiang'
   },
-  description: "李翔的个人作品集网站 - 展示技术项目、摄影作品、博客文章、音乐和电影收藏",
-  keywords: ["李翔", "个人网站", "作品集", "技术", "摄影", "博客", "全栈开发"],
-  authors: [{ name: "李翔" }],
-  creator: "李翔",
+  description: 'Personal website showcasing projects, photography, and technical insights',
+  keywords: ['Full Stack Developer', 'React', 'Next.js', 'TypeScript', 'Photography'],
+  authors: [{ name: 'Li Xiang' }],
+  creator: 'Li Xiang',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   openGraph: {
-    type: "website",
-    locale: "zh_CN",
-    url: "https://你的域名.com",
-    title: "李翔的个人网站",
-    description: "李翔的个人作品集网站 - 展示技术项目、摄影作品、博客文章、音乐和电影收藏",
-    siteName: "李翔的个人网站",
+    type: 'website',
+    locale: 'zh_CN',
+    url: '/',
+    title: 'Li Xiang - Full Stack Developer',
+    description: 'Personal website showcasing projects, photography, and technical insights',
+    siteName: 'Li Xiang'
   },
   twitter: {
-    card: "summary_large_image",
-    title: "李翔的个人网站",
-    description: "李翔的个人作品集网站 - 展示技术项目、摄影作品、博客文章、音乐和电影收藏",
+    card: 'summary_large_image',
+    title: 'Li Xiang - Full Stack Developer',
+    description: 'Personal website showcasing projects, photography, and technical insights'
   },
   robots: {
     index: true,
@@ -40,25 +39,27 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-};
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1
+    }
+  }
+}
 
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  children
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="zh-CN">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="zh-CN" className={inter.variable} suppressHydrationWarning>
+      <body className="min-h-screen bg-light-background-primary dark:bg-dark-background-primary">
+        <ThemeProvider>
+          <QueryProvider>
+            {children}
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }

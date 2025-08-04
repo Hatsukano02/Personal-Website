@@ -209,7 +209,7 @@ export interface ErrorResponse {
     status: number;
     name: string;
     message: string;
-    details?: any;
+    details?: Record<string, unknown>;
   };
 }
 
@@ -217,7 +217,7 @@ export interface ErrorResponse {
 export interface QueryParams {
   populate?: string | string[];
   fields?: string | string[];
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
   sort?: string | string[];
   pagination?: {
     page?: number;

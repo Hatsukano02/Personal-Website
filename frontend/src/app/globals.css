@@ -1,26 +1,220 @@
 @import "tailwindcss";
 
+/* Safelist for dynamic classes using @source inline() */
+@source inline("bg-red-500 bg-blue-500 bg-green-500 bg-purple-600 bg-pink-600 from-blue-500 via-purple-600 to-pink-600");
+
+/* ===== 主题切换过渡动画 ===== */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ===== 毛玻璃效果系统 ===== */
+
+/* 增强毛玻璃效果 */
+.glass-enhanced {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* 微妙动画效果 */
+.glass-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-hover:hover {
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* 可变字体加载 */
+@font-face {
+  font-family: 'SourceHanSans-VF';
+  src: url('/fonts/SourceHanSans-VF.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-stretch: 75% 125%;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F, U+2B820-2CEAF, U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'SourceHanSerif-VF';
+  src: url('/fonts/SourceHanSerif-VF.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F, U+2B820-2CEAF, U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'AlimamaFangYuanTiVF';
+  src: url('/fonts/AlimamaFangYuanTiVF.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* CSS变量定义 */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* 字体栈 */
+  --font-sans: 'SourceHanSans-VF', 'PingFang SC', system-ui, sans-serif;
+  --font-serif: 'SourceHanSerif-VF', 'PingFang SC', serif;
+  --font-playful: 'AlimamaFangYuanTiVF', 'SourceHanSans-VF', sans-serif;
+  --font-variable: 'SourceHanSans-VF', 'Inter-Variable', system-ui, sans-serif;
+  
+  /* 光标样式 */
+  --cursor-default: default;
+  --cursor-pointer: pointer;
+  
+  /* 动画缓动 */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-md: cubic-bezier(0.4, 0, 0.2, 1); /* Material Design标准 */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* 基础样式重置 */
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-optical-sizing: auto;
+  font-variation-settings: "wght" 400, "wdth" 100;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
+
+/* 可变字体工具类 */
+.font-variable {
+  font-family: var(--font-variable);
+  font-variation-settings: "wght" var(--font-weight, 400), "wdth" var(--font-width, 100);
+}
+
+.font-playful {
+  font-family: var(--font-playful);
+  font-variation-settings: "wght" var(--font-weight, 400);
+}
+
+/* 滚动容器样式 */
+.scroll-container {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Section滚动锚点 */
+.scroll-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* 毛玻璃效果 */
+.glass-effect {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass-effect {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* 噪点纹理 */
+.noise-texture::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.03;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9zdmc+');
+  background-size: 200px 200px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* 动画性能优化 */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-contents {
+  will-change: contents;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+
+/* 导航栏鼠标响应动画 */
+.nav-mouse-responsive {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+.nav-mouse-responsive:hover {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 可变字体性能优化 */
+.font-variation-optimized {
+  font-variation-settings: "wght" var(--font-weight, 400), "wdth" var(--font-width, 100);
+  transition: font-variation-settings 0.3s var(--ease-md);
+}
+
+/* 滚动提示动画 */
+@keyframes fade-in-out {
+  0% { opacity: 0; transform: translateY(10px); }
+  20% { opacity: 1; transform: translateY(0); }
+  80% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+.animate-fade-in-out {
+  opacity: 0;
+  animation: fade-in-out 4s ease-in-out forwards;
+  animation-delay: 1s;
+}
+
+/* 减弱动画支持 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .font-variation-optimized {
+    transition: none !important;
+  }
+  
+  .animate-fade-in-out {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+

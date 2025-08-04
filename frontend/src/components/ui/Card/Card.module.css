@@ -1,0 +1,28 @@
+.card {
+  @apply rounded-xl border transition-all duration-300;
+}
+
+.default {
+  @apply bg-light-background-primary border-light-border;
+  @apply dark:bg-dark-background-primary dark:border-dark-border;
+}
+
+.hover {
+  @apply hover:shadow-lg hover:scale-[1.02] cursor-pointer;
+  @apply hover:border-light-primary/20 dark:hover:border-dark-primary/20;
+}
+
+.featured {
+  @apply ring-2 ring-light-primary/20 dark:ring-dark-primary/20;
+  @apply shadow-xl border-light-primary/30 dark:border-dark-primary/30;
+}
+
+.glass {
+  @apply bg-white/10 backdrop-blur-xl border-white/20;
+  @apply dark:bg-black/10 dark:border-black/20;
+}
+
+.interactive {
+  @apply cursor-pointer transition-transform duration-200;
+  @apply hover:scale-105 active:scale-95;
+}

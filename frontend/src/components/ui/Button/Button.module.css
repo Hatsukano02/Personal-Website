@@ -1,0 +1,51 @@
+.button {
+  @apply inline-flex items-center justify-center rounded-full font-medium transition-all duration-200;
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.primary {
+  @apply bg-light-primary text-white hover:bg-light-primary/90;
+  @apply dark:bg-dark-primary dark:hover:bg-dark-primary/90;
+  @apply focus:ring-light-primary/20 dark:focus:ring-dark-primary/20;
+}
+
+.secondary {
+  @apply bg-light-secondary text-light-accent hover:bg-light-secondary/80;
+  @apply dark:bg-dark-secondary dark:text-dark-accent dark:hover:bg-dark-secondary/80;
+  @apply focus:ring-light-secondary/20 dark:focus:ring-dark-secondary/20;
+}
+
+.ghost {
+  @apply bg-transparent border border-light-border hover:bg-light-background-secondary;
+  @apply dark:border-dark-border dark:hover:bg-dark-background-secondary;
+  @apply text-light-text-primary dark:text-dark-text-primary;
+  @apply focus:ring-light-primary/20 dark:focus:ring-dark-primary/20;
+}
+
+.glass {
+  @apply bg-white/10 backdrop-blur-md border border-white/20;
+  @apply hover:bg-white/20 dark:bg-black/10 dark:border-black/20 dark:hover:bg-black/20;
+  @apply text-light-text-primary dark:text-dark-text-primary;
+  @apply focus:ring-white/20 dark:focus:ring-black/20;
+}
+
+.sm {
+  @apply px-3 py-1.5 text-sm gap-1.5;
+}
+
+.md {
+  @apply px-4 py-2 text-base gap-2;
+}
+
+.lg {
+  @apply px-6 py-3 text-lg gap-2.5;
+}
+
+.loading {
+  @apply opacity-75 cursor-wait;
+}
+
+.spinner {
+  @apply animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full;
+}
