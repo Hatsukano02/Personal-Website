@@ -91,8 +91,11 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [scale, setScale] = useState(1);
   const [scrollOffset, setScrollOffset] = useState(0); // 添加滚动偏移量状态
+  const [hoveredItemIndex, setHoveredItemIndex] = useState<number | null>(null);
   const navRef = useRef<HTMLElement>(null);
-  const leaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const currentScaleRef = useRef(1);
+  const targetScaleRef = useRef(1);
 
   // Intersection Observer 检测活跃section
   useEffect(() => {
@@ -168,7 +171,35 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
 
   // 鼠标位置响应效果
   useEffect(() => {
+    // 只在客户端启动鼠标响应
+    if (typeof window === "undefined") return;
+
+    let lastX = 0;
+    let lastY = 0;
+
+    const updateScale = () => {
+      const diff = targetScaleRef.current - currentScaleRef.current;
+
+      if (Math.abs(diff) > 0.001) {
+        currentScaleRef.current += diff * 0.2;
+        setScale(currentScaleRef.current);
+        animationFrameRef.current = requestAnimationFrame(updateScale);
+      } else {
+        currentScaleRef.current = targetScaleRef.current;
+        setScale(targetScaleRef.current);
+        animationFrameRef.current = null;
+      }
+    };
+
     const handleMouseMove = (e: MouseEvent) => {
+      const deltaX = Math.abs(e.clientX - lastX);
+      const deltaY = Math.abs(e.clientY - lastY);
+
+      if (deltaX < 5 && deltaY < 5) return;
+
+      lastX = e.clientX;
+      lastY = e.clientY;
+
       if (!navRef.current) return;
 
       const rect = navRef.current.getBoundingClientRect();
@@ -185,36 +216,41 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
       const normalizedY = distanceY / maxDistanceY;
       const ellipseDistance =
         normalizedX * normalizedX + normalizedY * normalizedY;
-      const isNear = ellipseDistance < 1;
 
-      if (leaveTimerRef.current) {
-        clearTimeout(leaveTimerRef.current);
-        leaveTimerRef.current = null;
-      }
-
-      if (isNear) {
+      if (ellipseDistance < 1) {
         const normalizedDistance = Math.max(
           0,
           Math.min(1, 1 - ellipseDistance)
         );
-        const easedDistance = 1 - Math.pow(1 - normalizedDistance, 3);
-        const targetScale = 1 + easedDistance * 0.15;
-        setScale(targetScale);
+        const easedDistance =
+          normalizedDistance *
+          normalizedDistance *
+          (3 - 2 * normalizedDistance);
+        targetScaleRef.current = 1 + easedDistance * 0.15;
       } else {
-        leaveTimerRef.current = setTimeout(() => {
-          setScale(1);
-          leaveTimerRef.current = null;
-        }, 500);
+        targetScaleRef.current = 1;
+      }
+
+      if (!animationFrameRef.current) {
+        animationFrameRef.current = requestAnimationFrame(updateScale);
       }
     };
 
-    document.addEventListener("mousemove", handleMouseMove);
+    const handleMouseLeave = () => {
+      targetScaleRef.current = 1;
+      if (!animationFrameRef.current) {
+        animationFrameRef.current = requestAnimationFrame(updateScale);
+      }
+    };
+
+    document.addEventListener("mousemove", handleMouseMove, { passive: true });
+    document.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
-      if (leaveTimerRef.current) {
-        clearTimeout(leaveTimerRef.current);
-        leaveTimerRef.current = null;
+      document.removeEventListener("mouseleave", handleMouseLeave);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
       }
     };
   }, []);
@@ -323,9 +359,10 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
                   const section = document.getElementById(item.sectionId);
                   section?.scrollIntoView({ behavior: "smooth" });
                 }}
+                onMouseEnter={() => setHoveredItemIndex(index)}
+                onMouseLeave={() => setHoveredItemIndex(null)}
                 className={cn(
                   "flex items-center gap-2 px-3 py-1 rounded-full cursor-pointer group shrink-0",
-                  "transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110",
                   isActive
                     ? "bg-light-background-tertiary/90 dark:bg-dark-background-tertiary/90"
                     : "hover:bg-light-background-tertiary/70 dark:hover:bg-dark-background-tertiary/70"
@@ -333,20 +370,25 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
                 style={{
                   width: `${ITEM_WIDTH}px`,
                   justifyContent: "center",
+                  transform: hoveredItemIndex === index ? "scale(1.1)" : "scale(1)",
+                  transition: "all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
                 }}
               >
                 <Icon
                   size={16}
                   className={cn(
-                    "transition-colors duration-200",
                     isActive
                       ? "text-light-text-primary dark:text-dark-text-primary"
                       : "text-light-text-secondary dark:text-dark-text-secondary group-hover:text-light-text-primary dark:group-hover:text-dark-text-primary"
                   )}
+                  style={{
+                    transform: hoveredItemIndex === index ? "scale(1.05)" : "scale(1)",
+                    transition: "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                  }}
                 />
                 <span
                   className={cn(
-                    "font-variable transition-all duration-300 ease-out whitespace-nowrap",
+                    "font-variable whitespace-nowrap",
                     isActive
                       ? "text-light-text-primary dark:text-dark-text-primary"
                       : "text-light-text-secondary dark:text-dark-text-secondary group-hover:text-light-text-primary dark:group-hover:text-dark-text-primary"
@@ -354,6 +396,8 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
                   style={{
                     fontSize: `${scale.fontSize}px`,
                     fontVariationSettings: `"wght" ${scale.fontWeight}, "wdth" ${scale.fontWidth}`,
+                    transform: hoveredItemIndex === index ? "scale(1.05)" : "scale(1)",
+                    transition: "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                   }}
                 >
                   {item.label}
