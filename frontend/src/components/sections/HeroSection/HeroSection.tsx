@@ -16,6 +16,15 @@ export default function HeroSection({ id }: HeroSectionProps) {
   const [clickCount, setClickCount] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isInFourthSequence, setIsInFourthSequence] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [lineAnimationTriggers, setLineAnimationTriggers] = useState({
+    line1: false, // Hi there,
+    line2: false, // it's Li here.
+    line3: false, // subtitle line1
+    line4: false, // subtitle line2
+    line5: false, // subtitle line3
+  });
+  const sectionRef = useRef<HTMLElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { effectiveTheme } = useTheme();
@@ -62,6 +71,48 @@ export default function HeroSection({ id }: HeroSectionProps) {
     });
   }, [isHovered, clickCount, isInFourthSequence]);
 
+  // 滚动触发逻辑 - 按行延迟触发动画
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !isVisible) {
+            setIsVisible(true);
+
+            // 按行延迟触发动画
+            const delays = [0, 100, 200, 350, 500]; // 每行延迟50ms
+            const lines = [
+              "line1",
+              "line2",
+              "line3",
+              "line4",
+              "line5",
+            ] as const;
+
+            lines.forEach((line, index) => {
+              setTimeout(() => {
+                setLineAnimationTriggers((prev) => ({
+                  ...prev,
+                  [line]: true,
+                }));
+              }, delays[index]);
+            });
+          }
+        });
+      },
+      {
+        threshold: 0.3,
+        rootMargin: "0px 0px -10% 0px",
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isVisible]);
+
   // 清理定时器
   useEffect(() => {
     return () => {
@@ -72,6 +123,7 @@ export default function HeroSection({ id }: HeroSectionProps) {
   }, []);
   return (
     <section
+      ref={sectionRef}
       id={id}
       className="relative min-h-screen flex items-center justify-center bg-light-background-primary dark:bg-dark-background-primary"
     >
@@ -115,16 +167,18 @@ export default function HeroSection({ id }: HeroSectionProps) {
                   fontVariationSettings: '"wght" 700',
                 }}
               >
-                <TextFloatAnimation 
-                  text={t.hero.greeting} 
-                  preset="quick" 
-                  triggerOnVisible={true}
+                <TextFloatAnimation
+                  text={t.hero.greeting}
+                  preset="quick"
+                  triggerOnVisible={false}
+                  autoStart={lineAnimationTriggers.line1}
                 />
                 <br />
-                <TextFloatAnimation 
+                <TextFloatAnimation
                   text={t.hero.introduction}
                   preset="quick"
-                  triggerOnVisible={true}
+                  triggerOnVisible={false}
+                  autoStart={lineAnimationTriggers.line2}
                 />
               </h1>
 
@@ -142,22 +196,25 @@ export default function HeroSection({ id }: HeroSectionProps) {
                   fontFamily: "var(--font-sans)",
                 }}
               >
-                <TextFloatAnimation 
-                  text={t.hero.subtitle.line1} 
-                  preset="quick" 
-                  triggerOnVisible={true}
+                <TextFloatAnimation
+                  text={t.hero.subtitle.line1}
+                  preset="quick"
+                  triggerOnVisible={false}
+                  autoStart={lineAnimationTriggers.line3}
                 />
                 <br />
-                <TextFloatAnimation 
-                  text={t.hero.subtitle.line2} 
-                  preset="quick" 
-                  triggerOnVisible={true}
+                <TextFloatAnimation
+                  text={t.hero.subtitle.line2}
+                  preset="quick"
+                  triggerOnVisible={false}
+                  autoStart={lineAnimationTriggers.line4}
                 />
                 <br />
-                <TextFloatAnimation 
-                  text={t.hero.subtitle.line3} 
-                  preset="quick" 
-                  triggerOnVisible={true}
+                <TextFloatAnimation
+                  text={t.hero.subtitle.line3}
+                  preset="quick"
+                  triggerOnVisible={false}
+                  autoStart={lineAnimationTriggers.line5}
                 />
               </div>
             </div>

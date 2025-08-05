@@ -42,7 +42,7 @@ const TextFloatAnimation: React.FC<TextFloatAnimationProps> = ({
   triggerOnVisible = false
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isStarted, setIsStarted] = useState(!triggerOnVisible && autoStart);
+  const [isStarted, setIsStarted] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   
   const config = PRESET_CONFIGS[preset];
@@ -67,6 +67,13 @@ const TextFloatAnimation: React.FC<TextFloatAnimationProps> = ({
     }
   }, [isStarted, text.length, config, onComplete]);
   
+  // 外部控制触发逻辑
+  useEffect(() => {
+    if (autoStart && !triggerOnVisible && !isStarted) {
+      setIsStarted(true);
+    }
+  }, [autoStart, triggerOnVisible, isStarted]);
+
   // 滚动触发逻辑
   useEffect(() => {
     if (!triggerOnVisible || isStarted) return;
