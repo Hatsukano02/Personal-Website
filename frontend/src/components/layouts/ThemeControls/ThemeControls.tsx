@@ -32,7 +32,7 @@ const ThemeControls = ({ className }: ThemeControlsProps) => {
     if (newTheme === "dark") {
       // 清除之前的动画状态，确保不会有重叠
       setFlashingTheme(null);
-      
+
       // 使用 requestAnimationFrame 确保状态重置后再开始新动画
       requestAnimationFrame(() => {
         setFlashingTheme(newTheme);
@@ -136,18 +136,21 @@ const ThemeControls = ({ className }: ThemeControlsProps) => {
       <div
         ref={controlsRef}
         className={cn(
-          "bg-light-background-secondary/80 dark:bg-dark-background-secondary/80",
+          "bg-light-background-secondary/80 dark:bg-white/10",
           "backdrop-blur-md",
-          "border border-light-border-default dark:border-white/70",
+          "border",
           "rounded-full p-1.5",
           "flex items-center gap-1"
         )}
         style={{
           transform: `scale(${scale})`,
           transformOrigin: "center",
-          boxShadow: effectiveTheme === 'dark' 
-            ? 'inset 0 0 3px rgba(255, 255, 255, 0.15), 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15)'
-            : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          borderColor:
+            effectiveTheme === "dark" ? "rgba(255, 255, 255, 0.3)" : "#1F2937",
+          boxShadow:
+            effectiveTheme === "dark"
+              ? "inset 0 0 3px rgba(255, 255, 255, 0.15), 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15)"
+              : "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
         }}
       >
         {THEME_OPTIONS.map((option, index) => {
@@ -180,8 +183,8 @@ const ThemeControls = ({ className }: ThemeControlsProps) => {
                 style={{
                   transform:
                     hoveredOptionIndex === index ? "scale(1.05)" : "scale(1)",
-                  transition: shouldFlash 
-                    ? "transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)" 
+                  transition: shouldFlash
+                    ? "transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)"
                     : "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                 }}
               >

@@ -4,7 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils/cn";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useTheme } from "@/components/providers/ThemeProvider";
-import type { LanguageControlsProps, LanguageOption } from "./LanguageControls.types";
+import type {
+  LanguageControlsProps,
+  LanguageOption,
+} from "./LanguageControls.types";
 
 const LANGUAGE_OPTIONS: LanguageOption[] = [
   { value: "zh", label: "中文", shortLabel: "中" },
@@ -15,7 +18,9 @@ const LanguageControls = ({ className }: LanguageControlsProps) => {
   const { language, setLanguage } = useLanguage();
   const { effectiveTheme } = useTheme();
   const [scale, setScale] = useState(1);
-  const [hoveredOptionIndex, setHoveredOptionIndex] = useState<number | null>(null);
+  const [hoveredOptionIndex, setHoveredOptionIndex] = useState<number | null>(
+    null
+  );
   const controlsRef = useRef<HTMLDivElement>(null);
   const animationFrameRef = useRef<number | null>(null);
   const currentScaleRef = useRef(1);
@@ -114,18 +119,21 @@ const LanguageControls = ({ className }: LanguageControlsProps) => {
       <div
         ref={controlsRef}
         className={cn(
-          "bg-light-background-secondary/80 dark:bg-dark-background-secondary/80",
+          "bg-light-background-secondary/80 dark:bg-white/10",
           "backdrop-blur-md",
-          "border border-light-border-default dark:border-white/70",
+          "border",
           "rounded-full p-1.5",
           "flex items-center gap-1"
         )}
         style={{
           transform: `scale(${scale})`,
           transformOrigin: "center",
-          boxShadow: effectiveTheme === 'dark' 
-            ? 'inset 0 0 3px rgba(255, 255, 255, 0.15), 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15)'
-            : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          borderColor:
+            effectiveTheme === "dark" ? "rgba(255, 255, 255, 0.3)" : "#1F2937",
+          boxShadow:
+            effectiveTheme === "dark"
+              ? "inset 0 0 3px rgba(255, 255, 255, 0.15), 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15)"
+              : "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
         }}
       >
         {LANGUAGE_OPTIONS.map((option, index) => {

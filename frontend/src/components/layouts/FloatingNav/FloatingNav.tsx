@@ -330,18 +330,21 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
       ref={navRef}
       className={cn(
         "fixed bottom-8 left-1/2 z-50",
-        "bg-light-background-secondary/80 dark:bg-dark-background-secondary/80",
+        "bg-light-background-secondary/80 dark:bg-white/10",
         "backdrop-blur-md",
-        "border border-light-border-default dark:border-white/70",
+        "border",
         "rounded-full px-4 py-2",
         className
       )}
       style={{
         transform: `translate(-50%, 0) scale(${scale})`,
         transformOrigin: "center bottom",
-        boxShadow: effectiveTheme === 'dark' 
-          ? 'inset 0 0 3px rgba(255, 255, 255, 0.15), 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15)'
-          : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        borderColor:
+          effectiveTheme === "dark" ? "rgba(255, 255, 255, 0.3)" : "#1F2937",
+        boxShadow:
+          effectiveTheme === "dark"
+            ? "inset 0 0 3px rgba(255, 255, 255, 0.15), 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15)"
+            : "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
       }}
     >
       {/* 外层遮罩容器 - 固定宽度，只显示5个项目 */}
