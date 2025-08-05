@@ -309,6 +309,11 @@ body {
   animation-delay: 6s;
 }
 
+/* 图片悬浮阴影效果 */
+.shadow-image-hover {
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+}
+
 /* 减弱动画支持 */
 @media (prefers-reduced-motion: reduce) {
   * {

@@ -23,6 +23,7 @@ export default function HeroSection({ id }: HeroSectionProps) {
   };
 
   const handleMouseLeave = () => {
+    console.log("🐭 Mouse Leave - Setting isHovered to false");
     setIsHovered(false);
     // 如果不在第四次序列中，设置延迟重置
     if (!isInFourthSequence && clickCount > 0) {
@@ -36,6 +37,7 @@ export default function HeroSection({ id }: HeroSectionProps) {
   };
 
   const handleMouseEnter = () => {
+    console.log("🐭 Mouse Enter - Setting isHovered to true");
     setIsHovered(true);
     // 鼠标进入时清除重置定时器
     if (resetTimerRef.current) {
@@ -43,6 +45,15 @@ export default function HeroSection({ id }: HeroSectionProps) {
       resetTimerRef.current = null;
     }
   };
+
+  // 调试状态变化
+  useEffect(() => {
+    console.log("🔍 State Update:", {
+      isHovered,
+      clickCount,
+      isInFourthSequence,
+    });
+  }, [isHovered, clickCount, isInFourthSequence]);
 
   // 清理定时器
   useEffect(() => {
@@ -124,30 +135,18 @@ export default function HeroSection({ id }: HeroSectionProps) {
             <motion.div
               ref={imageRef}
               className="relative flex-shrink-0 cursor-pointer"
-              style={{
-                width: "clamp(14rem, 35vw, 35rem)",
-                height: "clamp(14rem, 35vw, 35rem)",
-              }}
-              initial={{
-                scale: 1,
-                filter: "none",
-                rotate: 0,
-              }}
+              style={
+                {
+                  width: "clamp(14rem, 35vw, 35rem)",
+                  height: "clamp(14rem, 35vw, 35rem)",
+                  "--shadow-opacity": isHovered ? "0.45" : "0",
+                  filter: `drop-shadow(0 20px 40px rgba(0, 0, 0, var(--shadow-opacity, 0)))`,
+                  transition:
+                    "filter 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                } as any
+              }
               animate={{
                 scale: isHovered ? 1.05 : 1,
-                filter: isHovered
-                  ? "drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3))"
-                  : "none",
-                rotate:
-                  clickCount === 1
-                    ? [0, -3, 3, -2, 2, 0]
-                    : clickCount === 2
-                    ? [0, -5, 5, -4, 4, -2, 2, 0]
-                    : clickCount === 3
-                    ? [0, -8, 8, -6, 6, -4, 4, -2, 2, 0]
-                    : clickCount === 4
-                    ? [0, 360, 375, 360, 0]
-                    : 0,
               }}
               transition={{
                 scale: {
@@ -156,17 +155,6 @@ export default function HeroSection({ id }: HeroSectionProps) {
                   damping: 30,
                   duration: 0.6,
                 },
-                filter: {
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 30,
-                  duration: 0.6,
-                },
-                rotate: {
-                  duration: clickCount === 4 ? 3.0 : clickCount * 0.2 + 0.4,
-                  ease: clickCount === 4 ? [0.25, 0.1, 0.25, 1] : "easeInOut",
-                  times: clickCount === 4 ? [0, 0.4, 0.5, 0.6, 1] : undefined,
-                },
               }}
               whileTap={{
                 scale: 0.95,
@@ -174,29 +162,51 @@ export default function HeroSection({ id }: HeroSectionProps) {
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
               onClick={handleImageClick}
-              onAnimationComplete={() => {
-                if (clickCount === 4) {
-                  setIsInFourthSequence(true);
-                  // 第四次动画完成后，等待1秒后重置点击计数
-                  setTimeout(() => {
-                    setClickCount(0);
-                    setIsInFourthSequence(false);
-                  }, 1000);
-                }
-              }}
             >
-              <Image
-                src="/my-notion-face-transparent.png"
-                alt="Li's Avatar"
-                fill
-                sizes="(max-width: 768px) 50vw, 35vw"
-                className="object-contain"
-                priority
-                quality={100}
-                style={{
-                  imageRendering: "crisp-edges",
+              {/* 点击动画层 - 独立的motion.div用于旋转动画 */}
+              <motion.div
+                className="w-full h-full"
+                animate={{
+                  rotate:
+                    clickCount === 1
+                      ? [0, -3, 3, -2, 2, 0]
+                      : clickCount === 2
+                      ? [0, -5, 5, -4, 4, -2, 2, 0]
+                      : clickCount === 3
+                      ? [0, -8, 8, -6, 6, -4, 4, -2, 2, 0]
+                      : clickCount === 4
+                      ? [0, 360, 375, 0]
+                      : 0,
                 }}
-              />
+                transition={{
+                  duration: clickCount === 4 ? 3.0 : clickCount * 0.2 + 0.4,
+                  ease: clickCount === 4 ? [0.25, 0.1, 0.25, 1] : "easeInOut",
+                  times: clickCount === 4 ? [0, 0.4, 0.55, 1] : undefined,
+                }}
+                onAnimationComplete={() => {
+                  if (clickCount === 4) {
+                    setIsInFourthSequence(true);
+                    // 第四次动画完成后，等待1秒后重置点击计数
+                    setTimeout(() => {
+                      setClickCount(0);
+                      setIsInFourthSequence(false);
+                    }, 1000);
+                  }
+                }}
+              >
+                <Image
+                  src="/my-notion-face-transparent.png"
+                  alt="Li's Avatar"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 35vw"
+                  className="object-contain"
+                  priority
+                  quality={100}
+                  style={{
+                    imageRendering: "crisp-edges",
+                  }}
+                />
+              </motion.div>
             </motion.div>
           </div>
         </div>
