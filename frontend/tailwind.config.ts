@@ -59,7 +59,7 @@ const config: Config & { safelist?: string[] } = {
       fontFamily: {
         'sans': ['SourceHanSans-VF', 'PingFang SC', 'system-ui', 'sans-serif'],
         'serif': ['SourceHanSerif-VF', 'PingFang SC', 'serif'],
-        'playful': ['AlimamaFangYuanTiVF', 'SourceHanSans-VF', 'sans-serif'],
+        'playful': ['SourceHanSans-VF', 'sans-serif'],
         'variable': ['SourceHanSans-VF', 'Inter-Variable', 'system-ui', 'sans-serif']
       },
       fontWeight: {

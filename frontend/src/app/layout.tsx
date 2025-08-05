@@ -20,6 +20,11 @@ export const metadata: Metadata = {
   authors: [{ name: 'Li Xiang' }],
   creator: 'Li Xiang',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  icons: {
+    icon: '/my-notion-face-transparent.png',
+    shortcut: '/my-notion-face-transparent.png',
+    apple: '/my-notion-face-transparent.png'
+  },
   openGraph: {
     type: 'website',
     locale: 'zh_CN',

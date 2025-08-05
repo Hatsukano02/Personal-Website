@@ -82,6 +82,7 @@ export default function HeroSection({ id }: HeroSectionProps) {
                 src="/my-notion-face-transparent.png"
                 alt="Li's Avatar"
                 fill
+                sizes="(max-width: 768px) 50vw, 35vw"
                 className="object-contain"
                 priority
               />

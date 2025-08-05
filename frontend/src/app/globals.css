@@ -50,13 +50,6 @@ html {
   unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F, U+2B820-2CEAF, U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-@font-face {
-  font-family: 'AlimamaFangYuanTiVF';
-  src: url('/fonts/AlimamaFangYuanTiVF.woff2') format('woff2-variations');
-  font-weight: 200 900;
-  font-display: swap;
-  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 
 /* CSS变量定义 */
 :root {
@@ -95,7 +88,7 @@ html {
   /* 字体栈 */
   --font-sans: 'SourceHanSans-VF', 'PingFang SC', system-ui, sans-serif;
   --font-serif: 'SourceHanSerif-VF', 'PingFang SC', serif;
-  --font-playful: 'AlimamaFangYuanTiVF', 'SourceHanSans-VF', sans-serif;
+  --font-playful: 'SourceHanSans-VF', sans-serif;
   --font-variable: 'SourceHanSans-VF', 'Inter-Variable', system-ui, sans-serif;
   
   /* 光标样式 */
