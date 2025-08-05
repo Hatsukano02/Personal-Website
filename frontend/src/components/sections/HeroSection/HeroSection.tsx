@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import LanguageControls from "@/components/layouts/LanguageControls";
 import React from "react";
 
@@ -18,6 +19,7 @@ export default function HeroSection({ id }: HeroSectionProps) {
   const imageRef = useRef<HTMLDivElement>(null);
   const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { effectiveTheme } = useTheme();
+  const { t } = useLanguage();
 
   const handleImageClick = () => {
     setClickCount((prev) => {
@@ -105,7 +107,7 @@ export default function HeroSection({ id }: HeroSectionProps) {
                 className="font-sans text-light-text-primary dark:text-dark-text-primary"
                 style={{
                   fontSize: "clamp(2.5rem, 10vw, 6.5rem)",
-                  lineHeight: "clamp(2.4rem, 9vw, 6.2rem)", // 稍微加大但不过大
+                  lineHeight: "clamp(2.7rem, 11vw, 7.0rem)", // 行距稍微加一点
                   margin: 0,
                   textAlign: "left",
                   fontFamily: "var(--font-sans)",
@@ -113,12 +115,12 @@ export default function HeroSection({ id }: HeroSectionProps) {
                   fontVariationSettings: '"wght" 700',
                 }}
               >
-                Hi
+                {t.hero.greeting}
                 <br />
-                <span 
+                <span
                   className={isGradientActive ? "animate-gradient-flow" : ""}
                 >
-                  it&apos;s Li here.
+                  {t.hero.introduction}
                 </span>
               </h1>
 
@@ -136,9 +138,9 @@ export default function HeroSection({ id }: HeroSectionProps) {
                   fontFamily: "var(--font-sans)",
                 }}
               >
-                CS Major <br />
-                Photography Learner <br />
-                PC & Console Gamer
+                {t.hero.subtitle.line1} <br />
+                {t.hero.subtitle.line2} <br />
+                {t.hero.subtitle.line3}
               </p>
             </div>
 
@@ -146,15 +148,19 @@ export default function HeroSection({ id }: HeroSectionProps) {
             <motion.div
               ref={imageRef}
               className="relative flex-shrink-0 cursor-pointer"
-              style={{
-                width: "clamp(14rem, 35vw, 35rem)",
-                height: "clamp(14rem, 35vw, 35rem)",
-                "--shadow-opacity": isHovered ? "0.45" : "0",
-                filter: effectiveTheme === 'dark' 
-                  ? `drop-shadow(0 20px 40px rgba(255, 255, 255, var(--shadow-opacity, 0)))`
-                  : `drop-shadow(0 20px 40px rgba(0, 0, 0, var(--shadow-opacity, 0)))`,
-                transition: "filter 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-              } as React.CSSProperties & { "--shadow-opacity": string }}
+              style={
+                {
+                  width: "clamp(14rem, 35vw, 35rem)",
+                  height: "clamp(14rem, 35vw, 35rem)",
+                  "--shadow-opacity": isHovered ? "0.45" : "0",
+                  filter:
+                    effectiveTheme === "dark"
+                      ? `drop-shadow(0 20px 40px rgba(255, 255, 255, var(--shadow-opacity, 0)))`
+                      : `drop-shadow(0 20px 40px rgba(0, 0, 0, var(--shadow-opacity, 0)))`,
+                  transition:
+                    "filter 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                } as React.CSSProperties & { "--shadow-opacity": string }
+              }
               animate={{
                 scale: isHovered ? 1.05 : 1,
               }}
@@ -232,7 +238,7 @@ export default function HeroSection({ id }: HeroSectionProps) {
         {/* 滚动指示器 - 纯文字提示，位置更靠近导航栏 */}
         <div className="fixed bottom-24 left-1/2 -translate-x-1/2 inline-flex flex-col items-center animate-fade-in-out">
           <span className="text-sm mb-2 text-light-text-muted dark:text-dark-text-muted">
-            Scroll down to explore
+            {t.hero.scrollHint}
           </span>
           <div className="w-5 h-5 text-light-text-muted dark:text-dark-text-muted animate-bounce">
             ↓

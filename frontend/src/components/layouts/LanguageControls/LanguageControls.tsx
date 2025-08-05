@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Languages } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
-import type { LanguageControlsProps, LanguageOption, Language } from "./LanguageControls.types";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import type { LanguageControlsProps, LanguageOption } from "./LanguageControls.types";
 
 const LANGUAGE_OPTIONS: LanguageOption[] = [
   { value: "zh", label: "中文", shortLabel: "中" },
@@ -11,20 +11,13 @@ const LANGUAGE_OPTIONS: LanguageOption[] = [
 ];
 
 const LanguageControls = ({ className }: LanguageControlsProps) => {
-  const [language, setLanguage] = useState<Language>("zh");
+  const { language, setLanguage } = useLanguage();
   const [scale, setScale] = useState(1);
   const [hoveredOptionIndex, setHoveredOptionIndex] = useState<number | null>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
   const animationFrameRef = useRef<number | null>(null);
   const currentScaleRef = useRef(1);
   const targetScaleRef = useRef(1);
-
-  // 处理语言切换
-  const handleLanguageChange = (newLanguage: Language) => {
-    setLanguage(newLanguage);
-    // TODO: 这里可以添加国际化逻辑
-    console.log("Language changed to:", newLanguage);
-  };
 
   // 鼠标位置响应效果 - 与主题切换控件保持一致
   useEffect(() => {
@@ -138,7 +131,7 @@ const LanguageControls = ({ className }: LanguageControlsProps) => {
           return (
             <button
               key={option.value}
-              onClick={() => handleLanguageChange(option.value)}
+              onClick={() => setLanguage(option.value as "zh" | "en")}
               onMouseEnter={() => setHoveredOptionIndex(index)}
               onMouseLeave={() => setHoveredOptionIndex(null)}
               className={cn(

@@ -14,6 +14,7 @@ import {
   Folder,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import type { NavigationItem, FloatingNavProps } from "./FloatingNav.types";
 
 const NAVIGATION_ITEMS: NavigationItem[] = [
@@ -96,6 +97,13 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
   const animationFrameRef = useRef<number | null>(null);
   const currentScaleRef = useRef(1);
   const targetScaleRef = useRef(1);
+  const { t } = useLanguage();
+
+  // 创建带翻译的导航项
+  const navigationItems = NAVIGATION_ITEMS.map(item => ({
+    ...item,
+    label: t.nav[item.id as keyof typeof t.nav] || item.label
+  }));
 
   // Intersection Observer 检测活跃section
   useEffect(() => {
@@ -109,7 +117,7 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const sectionId = entry.target.id;
-          const index = NAVIGATION_ITEMS.findIndex(
+          const index = navigationItems.findIndex(
             (item) => item.sectionId === sectionId
           );
           if (index !== -1) {
@@ -121,7 +129,7 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
     }, observerOptions);
 
     // 观察所有section
-    NAVIGATION_ITEMS.forEach((item) => {
+    navigationItems.forEach((item) => {
       const section = document.getElementById(item.sectionId);
       if (section) {
         observer.observe(section);
@@ -129,7 +137,7 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [navigationItems]);
 
   // 计算项目样式（基于距离活跃项目的距离）
   const getItemScale = useCallback((itemIndex: number, activeIndex: number) => {
@@ -157,7 +165,7 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
     const targetOffset =
       (activeSectionIndex - CENTER_INDEX) * (ITEM_WIDTH + GAP_SIZE);
     const totalWidth =
-      NAVIGATION_ITEMS.length * (ITEM_WIDTH + GAP_SIZE) - GAP_SIZE;
+      navigationItems.length * (ITEM_WIDTH + GAP_SIZE) - GAP_SIZE;
     const maxOffset = totalWidth - CONTAINER_WIDTH;
 
     const newOffset = Math.max(0, Math.min(targetOffset, maxOffset));
@@ -167,7 +175,7 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
       setScrollOffset(newOffset);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSectionIndex, CONTAINER_WIDTH]);
+  }, [activeSectionIndex, CONTAINER_WIDTH, navigationItems.length]);
 
   // 鼠标位置响应效果
   useEffect(() => {
@@ -263,7 +271,7 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
       const currentIndex = activeSectionIndex;
       let newIndex;
 
-      if (delta > 0 && currentIndex < NAVIGATION_ITEMS.length - 1) {
+      if (delta > 0 && currentIndex < navigationItems.length - 1) {
         newIndex = currentIndex + 1;
       } else if (delta < 0 && currentIndex > 0) {
         newIndex = currentIndex - 1;
@@ -272,11 +280,11 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
       }
 
       const section = document.getElementById(
-        NAVIGATION_ITEMS[newIndex].sectionId
+        navigationItems[newIndex].sectionId
       );
       section?.scrollIntoView({ behavior: "smooth" });
     },
-    [activeSectionIndex]
+    [activeSectionIndex, navigationItems]
   );
 
   // 绑定滚轮事件
@@ -299,9 +307,9 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
         const direction = e.key === "ArrowLeft" ? -1 : 1;
         const newIndex = activeSectionIndex + direction;
 
-        if (newIndex >= 0 && newIndex < NAVIGATION_ITEMS.length) {
+        if (newIndex >= 0 && newIndex < navigationItems.length) {
           const targetSection = document.getElementById(
-            NAVIGATION_ITEMS[newIndex].sectionId
+            navigationItems[newIndex].sectionId
           );
           targetSection?.scrollIntoView({ behavior: "smooth" });
         }
@@ -313,7 +321,7 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeSectionIndex]);
+  }, [activeSectionIndex, navigationItems]);
 
   return (
     <nav
@@ -349,7 +357,7 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
             transition: "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
           }}
         >
-          {NAVIGATION_ITEMS.map((item, index) => {
+          {navigationItems.map((item, index) => {
             const Icon = item.icon;
             const isActive = item.sectionId === activeSection;
             const scale = getItemScale(index, activeSectionIndex);
