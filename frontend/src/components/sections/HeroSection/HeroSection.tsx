@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import LanguageControls from "@/components/layouts/LanguageControls";
 import React from "react";
 
 interface HeroSectionProps {
@@ -72,6 +73,8 @@ export default function HeroSection({ id }: HeroSectionProps) {
       id={id}
       className="relative min-h-screen flex items-center justify-center bg-light-background-primary dark:bg-dark-background-primary"
     >
+      {/* 语言切换控件 - 左上角 */}
+      <LanguageControls />
       {/* 内容区域 - 整体居中布局 */}
       <div className="relative z-10 h-screen flex items-center justify-center">
         {/* 主容器 - 文字+图片整体容器，应用边缘控制 */}
