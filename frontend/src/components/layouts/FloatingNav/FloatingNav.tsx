@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import type { NavigationItem, FloatingNavProps } from "./FloatingNav.types";
 
 const NAVIGATION_ITEMS: NavigationItem[] = [
@@ -98,11 +99,12 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
   const currentScaleRef = useRef(1);
   const targetScaleRef = useRef(1);
   const { t } = useLanguage();
+  const { effectiveTheme } = useTheme();
 
   // 创建带翻译的导航项
-  const navigationItems = NAVIGATION_ITEMS.map(item => ({
+  const navigationItems = NAVIGATION_ITEMS.map((item) => ({
     ...item,
-    label: t.nav[item.id as keyof typeof t.nav] || item.label
+    label: t.nav[item.id as keyof typeof t.nav] || item.label,
   }));
 
   // Intersection Observer 检测活跃section
@@ -328,17 +330,18 @@ const FloatingNav = ({ className }: FloatingNavProps) => {
       ref={navRef}
       className={cn(
         "fixed bottom-8 left-1/2 z-50",
-        "bg-light-background-secondary/80 dark:bg-dark-background-secondary/80",
+        "bg-light-background-secondary/80 dark:bg-slate-600/80",
         "backdrop-blur-md",
-        "border border-light-border-default dark:border-transparent",
-        "dark:shadow-[inset_0_0_0_1px_rgba(248,250,252,0.15),0_10px_15px_-3px_rgba(0,0,0,0.25),0_4px_6px_-2px_rgba(0,0,0,0.15)]",
+        "border border-light-border-default dark:border-white/70",
         "rounded-full px-4 py-2",
-        "shadow-lg dark:shadow-dark-shadow",
         className
       )}
       style={{
         transform: `translate(-50%, 0) scale(${scale})`,
         transformOrigin: "center bottom",
+        boxShadow: effectiveTheme === 'dark' 
+          ? 'inset 0 0 3px rgba(255, 255, 255, 0.15), 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15)'
+          : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
       }}
     >
       {/* 外层遮罩容器 - 固定宽度，只显示5个项目 */}

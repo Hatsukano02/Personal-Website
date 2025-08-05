@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils/cn";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import type { LanguageControlsProps, LanguageOption } from "./LanguageControls.types";
 
 const LANGUAGE_OPTIONS: LanguageOption[] = [
@@ -12,6 +13,7 @@ const LANGUAGE_OPTIONS: LanguageOption[] = [
 
 const LanguageControls = ({ className }: LanguageControlsProps) => {
   const { language, setLanguage } = useLanguage();
+  const { effectiveTheme } = useTheme();
   const [scale, setScale] = useState(1);
   const [hoveredOptionIndex, setHoveredOptionIndex] = useState<number | null>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
@@ -112,17 +114,18 @@ const LanguageControls = ({ className }: LanguageControlsProps) => {
       <div
         ref={controlsRef}
         className={cn(
-          "bg-light-background-secondary/80 dark:bg-dark-background-secondary/80",
+          "bg-light-background-secondary/80 dark:bg-slate-600/80",
           "backdrop-blur-md",
-          "border border-light-border-default dark:border-transparent",
-          "dark:shadow-[inset_0_0_0_1px_rgba(248,250,252,0.15),0_10px_15px_-3px_rgba(0,0,0,0.25),0_4px_6px_-2px_rgba(0,0,0,0.15)]",
+          "border border-light-border-default dark:border-white/70",
           "rounded-full p-1.5",
-          "shadow-lg dark:shadow-dark-shadow",
           "flex items-center gap-1"
         )}
         style={{
           transform: `scale(${scale})`,
           transformOrigin: "center",
+          boxShadow: effectiveTheme === 'dark' 
+            ? 'inset 0 0 3px rgba(255, 255, 255, 0.15), 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15)'
+            : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
         }}
       >
         {LANGUAGE_OPTIONS.map((option, index) => {
