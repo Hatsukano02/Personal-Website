@@ -80,9 +80,9 @@ html {
   
   /* 特殊效果颜色 */
   --old-gold: #d9b70d;
-  --dark-background-primary: #0F172A;
-  --dark-background-secondary: #1E293B;
-  --dark-background-tertiary: #334155;
+  --dark-background-primary: #1C1C1E;
+  --dark-background-secondary: #2C2C2E;
+  --dark-background-tertiary: #3A3A3C;
   --dark-text-primary: #F8FAFC;
   --dark-text-secondary: #CBD5E1;       /* 更亮的灰色，提高对比度 */
   --dark-text-muted: #94A3B8;           /* 更亮的灰色，提高对比度 */
@@ -283,6 +283,39 @@ body {
   animation-fill-mode: both;
 }
 
+/* 动态渐变背景动画 - 缓慢流动效果 */
+@keyframes blob {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  25% { 
+    transform: translate(20px, -20px) scale(1.05) rotate(45deg);
+  }
+  50% { 
+    transform: translate(-15px, 15px) scale(0.98) rotate(90deg);
+  }
+  75% { 
+    transform: translate(10px, 5px) scale(1.02) rotate(135deg);
+  }
+}
+
+.animate-blob {
+  animation: blob 30s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
+  will-change: transform;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+.animation-delay-6000 {
+  animation-delay: 6s;
+}
+
 /* 减弱动画支持 */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -298,6 +331,10 @@ body {
   .animate-fade-in-out {
     animation: none !important;
     opacity: 1;
+  }
+  
+  .animate-blob {
+    animation: none !important;
   }
 }
 

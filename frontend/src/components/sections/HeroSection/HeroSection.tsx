@@ -1,7 +1,5 @@
 "use client";
 
-import { GlassCard } from "@/components/ui/GlassCard";
-
 interface HeroSectionProps {
   id: string;
 }
@@ -12,8 +10,6 @@ export default function HeroSection({ id }: HeroSectionProps) {
       id={id}
       className="relative min-h-screen flex items-center justify-center bg-light-background-primary dark:bg-dark-background-primary"
     >
-      {/* 微妙的渐变背景 */}
-      <div className="absolute inset-0 bg-gradient-to-br from-light-background-primary via-light-background-secondary to-light-background-tertiary dark:from-dark-background-primary dark:via-dark-background-secondary dark:to-dark-background-tertiary opacity-50"></div>
 
       {/* 内容区域 */}
       <div className="container mx-auto px-4 py-16 relative z-10">

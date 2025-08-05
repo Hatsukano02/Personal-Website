@@ -1,0 +1,1 @@
+export { default as AnimatedGradientBackground } from './AnimatedGradientBackground';
