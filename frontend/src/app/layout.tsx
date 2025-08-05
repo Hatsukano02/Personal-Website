@@ -1,14 +1,7 @@
-import { Inter } from 'next/font/google'
 import { Metadata } from 'next'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { QueryProvider } from '@/components/providers/QueryProvider'
 import '@/app/globals.css'
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter'
-})
 
 export const metadata: Metadata = {
   title: {
@@ -57,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN" className={inter.variable} suppressHydrationWarning>
+    <html lang="zh-CN" suppressHydrationWarning>
       <body className="min-h-screen bg-light-background-primary dark:bg-dark-background-primary">
         <ThemeProvider>
           <QueryProvider>

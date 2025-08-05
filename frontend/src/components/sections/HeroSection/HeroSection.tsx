@@ -1,11 +1,57 @@
 "use client";
 import Image from "next/image";
+import { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 
 interface HeroSectionProps {
   id: string;
 }
 
 export default function HeroSection({ id }: HeroSectionProps) {
+  const [clickCount, setClickCount] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isInFourthSequence, setIsInFourthSequence] = useState(false);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleImageClick = () => {
+    setClickCount((prev) => {
+      const newCount = prev + 1;
+      // 让计数器正常递增，重置逻辑交给onAnimationComplete处理
+      return newCount;
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    // 如果不在第四次序列中，设置延迟重置
+    if (!isInFourthSequence && clickCount > 0) {
+      if (resetTimerRef.current) {
+        clearTimeout(resetTimerRef.current);
+      }
+      resetTimerRef.current = setTimeout(() => {
+        setClickCount(0);
+      }, 1000);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    // 鼠标进入时清除重置定时器
+    if (resetTimerRef.current) {
+      clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = null;
+    }
+  };
+
+  // 清理定时器
+  useEffect(() => {
+    return () => {
+      if (resetTimerRef.current) {
+        clearTimeout(resetTimerRef.current);
+      }
+    };
+  }, []);
   return (
     <section
       id={id}
@@ -38,12 +84,15 @@ export default function HeroSection({ id }: HeroSectionProps) {
             >
               {/* 主标题 */}
               <h1
-                className="font-extrabold text-light-text-primary dark:text-dark-text-primary"
+                className="font-sans text-light-text-primary dark:text-dark-text-primary"
                 style={{
                   fontSize: "clamp(2.5rem, 10vw, 6.5rem)",
                   lineHeight: "clamp(2.4rem, 9vw, 6.2rem)", // 稍微加大但不过大
                   margin: 0,
                   textAlign: "left",
+                  fontFamily: "var(--font-sans)",
+                  fontWeight: 700,
+                  fontVariationSettings: '"wght" 700',
                 }}
               >
                 Hi
@@ -56,12 +105,13 @@ export default function HeroSection({ id }: HeroSectionProps) {
 
               {/* 副标题 */}
               <p
-                className="text-light-text-secondary dark:text-dark-text-secondary"
+                className="font-sans text-light-text-secondary dark:text-dark-text-secondary"
                 style={{
                   fontSize: "clamp(0.7rem, 2.2vw, 1.4rem)",
                   lineHeight: "clamp(1rem, 3.3vw, 2.1rem)",
                   margin: 0,
                   textAlign: "left",
+                  fontFamily: "var(--font-sans)",
                 }}
               >
                 CS Major <br />
@@ -71,11 +121,68 @@ export default function HeroSection({ id }: HeroSectionProps) {
             </div>
 
             {/* 图片容器 - 右侧，作为对齐基准 */}
-            <div
-              className="relative flex-shrink-0"
+            <motion.div
+              ref={imageRef}
+              className="relative flex-shrink-0 cursor-pointer"
               style={{
                 width: "clamp(14rem, 35vw, 35rem)",
                 height: "clamp(14rem, 35vw, 35rem)",
+              }}
+              initial={{
+                scale: 1,
+                filter: "none",
+                rotate: 0,
+              }}
+              animate={{
+                scale: isHovered ? 1.05 : 1,
+                filter: isHovered
+                  ? "drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3))"
+                  : "none",
+                rotate:
+                  clickCount === 1
+                    ? [0, -3, 3, -2, 2, 0]
+                    : clickCount === 2
+                    ? [0, -5, 5, -4, 4, -2, 2, 0]
+                    : clickCount === 3
+                    ? [0, -8, 8, -6, 6, -4, 4, -2, 2, 0]
+                    : clickCount === 4
+                    ? [0, 360, 375, 360, 0]
+                    : 0,
+              }}
+              transition={{
+                scale: {
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
+                  duration: 0.6,
+                },
+                filter: {
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
+                  duration: 0.6,
+                },
+                rotate: {
+                  duration: clickCount === 4 ? 3.0 : clickCount * 0.2 + 0.4,
+                  ease: clickCount === 4 ? [0.25, 0.1, 0.25, 1] : "easeInOut",
+                  times: clickCount === 4 ? [0, 0.4, 0.5, 0.6, 1] : undefined,
+                },
+              }}
+              whileTap={{
+                scale: 0.95,
+              }}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={handleImageClick}
+              onAnimationComplete={() => {
+                if (clickCount === 4) {
+                  setIsInFourthSequence(true);
+                  // 第四次动画完成后，等待1秒后重置点击计数
+                  setTimeout(() => {
+                    setClickCount(0);
+                    setIsInFourthSequence(false);
+                  }, 1000);
+                }
               }}
             >
               <Image
@@ -85,8 +192,12 @@ export default function HeroSection({ id }: HeroSectionProps) {
                 sizes="(max-width: 768px) 50vw, 35vw"
                 className="object-contain"
                 priority
+                quality={100}
+                style={{
+                  imageRendering: "crisp-edges",
+                }}
               />
-            </div>
+            </motion.div>
           </div>
         </div>
 

@@ -60,14 +60,16 @@ const config: Config & { safelist?: string[] } = {
         'sans': ['SourceHanSans-VF', 'PingFang SC', 'system-ui', 'sans-serif'],
         'serif': ['SourceHanSerif-VF', 'PingFang SC', 'serif'],
         'playful': ['SourceHanSans-VF', 'sans-serif'],
-        'variable': ['SourceHanSans-VF', 'Inter-Variable', 'system-ui', 'sans-serif']
+        'variable': ['SourceHanSans-VF', 'system-ui', 'sans-serif']
       },
       fontWeight: {
         'variable-light': '300',
         'variable-normal': '400',
         'variable-medium': '500',
         'variable-semibold': '600',
-        'variable-bold': '700'
+        'variable-bold': '700',
+        'variable-extrabold': '800',
+        'variable-black': '900'
       },
       spacing: {
         '18': '4.5rem',
