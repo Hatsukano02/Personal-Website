@@ -11,28 +11,73 @@ export default function HeroSection({ id }: HeroSectionProps) {
       id={id}
       className="relative min-h-screen flex items-center justify-center bg-light-background-primary dark:bg-dark-background-primary"
     >
-      {/* 内容区域 */}
-      <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto gap-12 md:gap-0">
-          {/* 左侧文字内容 */}
-          <div className="flex-1 w-full md:w-auto text-left md:pr-12">
-            {/* 主标题 - Hi 后换行，字号大但不过分夸张，间距规范 */}
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold mb-3 md:mb-5 text-light-text-primary dark:text-dark-text-primary leading-tight md:leading-[1.08]">
-              Hi
-              <br />
-              it&apos;s Li here.
-            </h1>
-            {/* 副标题与主标题间距更紧凑，副标题行距舒适 */}
-            <p className="text-lg md:text-xl mb-3 md:mb-4 text-light-text-secondary dark:text-dark-text-secondary max-w-xl leading-relaxed md:leading-loose">
-              CS Major <br />
-              Photography Learner <br />
-              PC & Console Gamer
-            </p>
-          </div>
+      {/* 内容区域 - 整体居中布局 */}
+      <div className="relative z-10 h-screen flex items-center justify-center">
+        {/* 主容器 - 文字+图片整体容器，应用边缘控制 */}
+        <div
+          className="relative flex items-center justify-center"
+          style={{
+            padding: "clamp(3rem, 12vw, 12rem)",
+            width: "100%",
+            maxWidth: "100vw",
+          }}
+        >
+          {/* 内容容器 - 文字和图片的组合 */}
+          <div
+            className="flex items-end"
+            style={{ gap: "clamp(2rem, 8vw, 6rem)" }}
+          >
+            {/* 文字内容 - 左侧 */}
+            <div
+              className="flex flex-col justify-end"
+              style={{
+                height: "clamp(14rem, 35vw, 35rem)",
+                width: "clamp(20rem, 50vw, 40rem)",
+                transform: "translateY(clamp(-1rem, -3vw, -2rem))",
+              }}
+            >
+              {/* 主标题 */}
+              <h1
+                className="font-extrabold text-light-text-primary dark:text-dark-text-primary"
+                style={{
+                  fontSize: "clamp(2.5rem, 10vw, 6.5rem)",
+                  lineHeight: "clamp(2.4rem, 9vw, 6.2rem)", // 稍微加大但不过大
+                  margin: 0,
+                  textAlign: "left",
+                }}
+              >
+                Hi
+                <br />
+                it&apos;s Li here.
+              </h1>
 
-          {/* 右侧头像图片，垂直居中，响应式宽高 */}
-          <div className="flex-1 flex justify-center items-center w-full md:w-auto">
-            <div className="relative w-56 h-56 md:w-[700px] md:h-[700px]">
+              {/* 主副标题间距 - 间距缩小一半 */}
+              <div style={{ marginTop: "clamp(0.25rem, 1vw, 0.75rem)" }}></div>
+
+              {/* 副标题 */}
+              <p
+                className="text-light-text-secondary dark:text-dark-text-secondary"
+                style={{
+                  fontSize: "clamp(0.7rem, 2.2vw, 1.4rem)",
+                  lineHeight: "clamp(1rem, 3.3vw, 2.1rem)",
+                  margin: 0,
+                  textAlign: "left",
+                }}
+              >
+                CS Major <br />
+                Photography Learner <br />
+                PC & Console Gamer
+              </p>
+            </div>
+
+            {/* 图片容器 - 右侧，作为对齐基准 */}
+            <div
+              className="relative flex-shrink-0"
+              style={{
+                width: "clamp(14rem, 35vw, 35rem)",
+                height: "clamp(14rem, 35vw, 35rem)",
+              }}
+            >
               <Image
                 src="/my-notion-face-transparent.png"
                 alt="Li's Avatar"
