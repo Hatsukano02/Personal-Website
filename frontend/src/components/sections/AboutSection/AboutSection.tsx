@@ -1,7 +1,5 @@
 'use client'
 
-import { GlassCard } from '@/components/ui/GlassCard'
-
 interface AboutSectionProps {
   id: string
 }

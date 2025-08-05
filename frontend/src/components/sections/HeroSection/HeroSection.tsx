@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import React from "react";
 
 interface HeroSectionProps {
   id: string;
@@ -12,6 +13,7 @@ export default function HeroSection({ id }: HeroSectionProps) {
   const [clickCount, setClickCount] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isInFourthSequence, setIsInFourthSequence] = useState(false);
+  const [isGradientActive, setIsGradientActive] = useState(false);
   const imageRef = useRef<HTMLDivElement>(null);
   const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { effectiveTheme } = useTheme();
@@ -110,7 +112,11 @@ export default function HeroSection({ id }: HeroSectionProps) {
               >
                 Hi
                 <br />
-                it&apos;s Li here.
+                <span 
+                  className={isGradientActive ? "animate-gradient-flow" : ""}
+                >
+                  it&apos;s Li here.
+                </span>
               </h1>
 
               {/* 主副标题间距 - 间距缩小一半 */}
@@ -137,18 +143,15 @@ export default function HeroSection({ id }: HeroSectionProps) {
             <motion.div
               ref={imageRef}
               className="relative flex-shrink-0 cursor-pointer"
-              style={
-                {
-                  width: "clamp(14rem, 35vw, 35rem)",
-                  height: "clamp(14rem, 35vw, 35rem)",
-                  "--shadow-opacity": isHovered ? "0.45" : "0",
-                  filter: effectiveTheme === 'dark' 
-                    ? `drop-shadow(0 20px 40px rgba(255, 255, 255, var(--shadow-opacity, 0)))`
-                    : `drop-shadow(0 20px 40px rgba(0, 0, 0, var(--shadow-opacity, 0)))`,
-                  transition:
-                    "filter 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-                } as any
-              }
+              style={{
+                width: "clamp(14rem, 35vw, 35rem)",
+                height: "clamp(14rem, 35vw, 35rem)",
+                "--shadow-opacity": isHovered ? "0.45" : "0",
+                filter: effectiveTheme === 'dark' 
+                  ? `drop-shadow(0 20px 40px rgba(255, 255, 255, var(--shadow-opacity, 0)))`
+                  : `drop-shadow(0 20px 40px rgba(0, 0, 0, var(--shadow-opacity, 0)))`,
+                transition: "filter 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+              } as React.CSSProperties & { "--shadow-opacity": string }}
               animate={{
                 scale: isHovered ? 1.05 : 1,
               }}
@@ -186,6 +189,14 @@ export default function HeroSection({ id }: HeroSectionProps) {
                   duration: clickCount === 4 ? 3.0 : clickCount * 0.2 + 0.4,
                   ease: clickCount === 4 ? [0.25, 0.1, 0.25, 1] : "easeInOut",
                   times: clickCount === 4 ? [0, 0.4, 0.55, 1] : undefined,
+                }}
+                onAnimationStart={() => {
+                  if (clickCount === 4) {
+                    setIsGradientActive(true);
+                    setTimeout(() => {
+                      setIsGradientActive(false);
+                    }, 2000);
+                  }
                 }}
                 onAnimationComplete={() => {
                   if (clickCount === 4) {
