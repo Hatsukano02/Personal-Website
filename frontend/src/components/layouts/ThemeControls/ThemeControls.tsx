@@ -136,7 +136,7 @@ const ThemeControls = ({ className }: ThemeControlsProps) => {
       <div
         ref={controlsRef}
         className={cn(
-          "bg-light-background-secondary/80 dark:bg-slate-600/80",
+          "bg-light-background-secondary/80 dark:bg-dark-background-secondary/80",
           "backdrop-blur-md",
           "border border-light-border-default dark:border-white/70",
           "rounded-full p-1.5",
