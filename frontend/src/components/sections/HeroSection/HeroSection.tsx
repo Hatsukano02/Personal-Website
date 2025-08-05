@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import LanguageControls from "@/components/layouts/LanguageControls";
+import TextFloatAnimation from "@/components/animations/TextFloatAnimation";
 import React from "react";
 
 interface HeroSectionProps {
@@ -15,7 +16,6 @@ export default function HeroSection({ id }: HeroSectionProps) {
   const [clickCount, setClickCount] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isInFourthSequence, setIsInFourthSequence] = useState(false);
-  const [isGradientActive, setIsGradientActive] = useState(false);
   const imageRef = useRef<HTMLDivElement>(null);
   const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { effectiveTheme } = useTheme();
@@ -115,20 +115,24 @@ export default function HeroSection({ id }: HeroSectionProps) {
                   fontVariationSettings: '"wght" 700',
                 }}
               >
-                {t.hero.greeting}
+                <TextFloatAnimation 
+                  text={t.hero.greeting} 
+                  preset="quick" 
+                  triggerOnVisible={true}
+                />
                 <br />
-                <span
-                  className={isGradientActive ? "animate-gradient-flow" : ""}
-                >
-                  {t.hero.introduction}
-                </span>
+                <TextFloatAnimation 
+                  text={t.hero.introduction}
+                  preset="quick"
+                  triggerOnVisible={true}
+                />
               </h1>
 
               {/* 主副标题间距 - 间距缩小一半 */}
               <div style={{ marginTop: "clamp(0.25rem, 1vw, 0.75rem)" }}></div>
 
               {/* 副标题 */}
-              <p
+              <div
                 className="font-sans text-light-text-secondary dark:text-dark-text-secondary"
                 style={{
                   fontSize: "clamp(0.7rem, 2.2vw, 1.4rem)",
@@ -138,10 +142,24 @@ export default function HeroSection({ id }: HeroSectionProps) {
                   fontFamily: "var(--font-sans)",
                 }}
               >
-                {t.hero.subtitle.line1} <br />
-                {t.hero.subtitle.line2} <br />
-                {t.hero.subtitle.line3}
-              </p>
+                <TextFloatAnimation 
+                  text={t.hero.subtitle.line1} 
+                  preset="quick" 
+                  triggerOnVisible={true}
+                />
+                <br />
+                <TextFloatAnimation 
+                  text={t.hero.subtitle.line2} 
+                  preset="quick" 
+                  triggerOnVisible={true}
+                />
+                <br />
+                <TextFloatAnimation 
+                  text={t.hero.subtitle.line3} 
+                  preset="quick" 
+                  triggerOnVisible={true}
+                />
+              </div>
             </div>
 
             {/* 图片容器 - 右侧，作为对齐基准 */}
@@ -199,14 +217,6 @@ export default function HeroSection({ id }: HeroSectionProps) {
                   ease: clickCount === 4 ? [0.25, 0.1, 0.25, 1] : "easeInOut",
                   times: clickCount === 4 ? [0, 0.4, 0.55, 1] : undefined,
                 }}
-                onAnimationStart={() => {
-                  if (clickCount === 4) {
-                    setIsGradientActive(true);
-                    setTimeout(() => {
-                      setIsGradientActive(false);
-                    }, 2000);
-                  }
-                }}
                 onAnimationComplete={() => {
                   if (clickCount === 4) {
                     setIsInFourthSequence(true);
@@ -218,18 +228,20 @@ export default function HeroSection({ id }: HeroSectionProps) {
                   }
                 }}
               >
-                <Image
-                  src="/my-notion-face-transparent.png"
-                  alt="Li's Avatar"
-                  fill
-                  sizes="(max-width: 768px) 50vw, 35vw"
-                  className="object-contain"
-                  priority
-                  quality={100}
-                  style={{
-                    imageRendering: "crisp-edges",
-                  }}
-                />
+                <div className="relative w-full h-full">
+                  <Image
+                    src="/my-notion-face-transparent.png"
+                    alt="Li's Avatar"
+                    fill
+                    sizes="(max-width: 768px) 50vw, 35vw"
+                    className="object-contain"
+                    priority
+                    quality={100}
+                    style={{
+                      imageRendering: "crisp-edges",
+                    }}
+                  />
+                </div>
               </motion.div>
             </motion.div>
           </div>

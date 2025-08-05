@@ -1,0 +1,68 @@
+/* 基础样式 */
+.container {
+  display: inline-block;
+}
+
+.char {
+  display: inline-block;
+  opacity: 0;
+  animation: floatUp var(--duration) var(--easing) var(--delay) forwards;
+}
+
+/* 空格字符处理 */
+.char.space {
+  width: 0.3em;
+}
+
+/* 核心动画 */
+@keyframes floatUp {
+  0% {
+    opacity: 0;
+    transform: translateY(var(--distance));
+    filter: blur(var(--blur-start));
+  }
+  20% {
+    opacity: 0.3;
+    filter: blur(calc(var(--blur-start) * 0.7));
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* 预设样式类 */
+.presetQuick {
+  --duration: 0.4s;
+  --distance: 20px;
+  --blur-start: 16px;
+  --easing: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.presetGrand {
+  --duration: 2.5s;
+  --distance: 20px;
+  --blur-start: 24px;
+  --easing: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.presetTypewriter {
+  --duration: 0.4s;
+  --distance: 20px;
+  --blur-start: 16px;
+  --easing: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* 触发前的初始状态 */
+.notStarted .char {
+  opacity: 0;
+  transform: translateY(var(--distance));
+  filter: blur(var(--blur-start));
+  animation: none;
+}
+
+/* 开始动画状态 */
+.started .char {
+  animation: floatUp var(--duration) var(--easing) var(--delay) forwards;
+}
