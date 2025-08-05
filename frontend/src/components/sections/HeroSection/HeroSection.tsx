@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 interface HeroSectionProps {
   id: string;
@@ -13,6 +14,7 @@ export default function HeroSection({ id }: HeroSectionProps) {
   const [isInFourthSequence, setIsInFourthSequence] = useState(false);
   const imageRef = useRef<HTMLDivElement>(null);
   const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const { effectiveTheme } = useTheme();
 
   const handleImageClick = () => {
     setClickCount((prev) => {
@@ -140,7 +142,9 @@ export default function HeroSection({ id }: HeroSectionProps) {
                   width: "clamp(14rem, 35vw, 35rem)",
                   height: "clamp(14rem, 35vw, 35rem)",
                   "--shadow-opacity": isHovered ? "0.45" : "0",
-                  filter: `drop-shadow(0 20px 40px rgba(0, 0, 0, var(--shadow-opacity, 0)))`,
+                  filter: effectiveTheme === 'dark' 
+                    ? `drop-shadow(0 20px 40px rgba(255, 255, 255, var(--shadow-opacity, 0)))`
+                    : `drop-shadow(0 20px 40px rgba(0, 0, 0, var(--shadow-opacity, 0)))`,
                   transition:
                     "filter 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                 } as any
