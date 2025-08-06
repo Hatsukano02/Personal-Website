@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "social_links",
+  "info": {
+    "singularName": "social-link",
+    "pluralName": "social-links",
+    "displayName": "Social Link",
+    "description": "社交链接管理"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "platform": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "configurable": false,
+      "private": false
+    },
+    "display_name": {
+      "type": "string",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "url": {
+      "type": "string",
+      "required": true,
+      "regex": "^https?:\\/\\/.+",
+      "configurable": false,
+      "private": false
+    },
+    "platform_icon": {
+      "type": "string",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "configurable": false,
+      "private": false
+    },
+    "display_order": {
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "configurable": false,
+      "private": false
+    }
+  }
+}

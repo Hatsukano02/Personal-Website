@@ -1,0 +1,135 @@
+{
+  "kind": "collectionType",
+  "collectionName": "photos",
+  "info": {
+    "singularName": "photo",
+    "pluralName": "photos",
+    "displayName": "Photo",
+    "description": "摄影作品"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "description": {
+      "type": "text",
+      "configurable": false,
+      "private": false
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ],
+      "configurable": false,
+      "private": false
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "Portrait",
+        "Landscape",
+        "Street",
+        "Architecture",
+        "Nature",
+        "Other"
+      ],
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "camera_model": {
+      "type": "string",
+      "configurable": false,
+      "private": false
+    },
+    "lens_model": {
+      "type": "string",
+      "configurable": false,
+      "private": false
+    },
+    "aperture": {
+      "type": "string",
+      "configurable": false,
+      "private": false
+    },
+    "shutter_speed": {
+      "type": "string",
+      "configurable": false,
+      "private": false
+    },
+    "iso": {
+      "type": "integer",
+      "configurable": false,
+      "private": false
+    },
+    "focal_length": {
+      "type": "string",
+      "configurable": false,
+      "private": false
+    },
+    "location": {
+      "type": "string",
+      "configurable": false,
+      "private": false
+    },
+    "taken_at": {
+      "type": "datetime",
+      "configurable": false,
+      "private": false
+    },
+    "is_hdr": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false,
+      "private": false
+    },
+    "color_space": {
+      "type": "enumeration",
+      "enum": [
+        "sRGB",
+        "Adobe_RGB",
+        "ProPhoto_RGB",
+        "DCI_P3"
+      ],
+      "default": "sRGB",
+      "configurable": false,
+      "private": false
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false,
+      "private": false
+    },
+    "display_order": {
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "configurable": false,
+      "private": false
+    },
+    "albums": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::photo-album.photo-album",
+      "inversedBy": "photos"
+    }
+  }
+}

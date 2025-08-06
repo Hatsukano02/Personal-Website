@@ -1,0 +1,82 @@
+{
+  "kind": "collectionType",
+  "collectionName": "photo_albums",
+  "info": {
+    "singularName": "photo-album",
+    "pluralName": "photo-albums",
+    "displayName": "Photo Album",
+    "description": "摄影作品集"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "album_name": {
+      "type": "string",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "album_name",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "description": {
+      "type": "text",
+      "configurable": false,
+      "private": false
+    },
+    "cover_photo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::photo.photo",
+      "configurable": false,
+      "private": false
+    },
+    "album_type": {
+      "type": "enumeration",
+      "enum": ["Travel", "Portrait", "Street", "Commercial", "Personal", "Other"],
+      "configurable": false,
+      "private": false
+    },
+    "location": {
+      "type": "string",
+      "configurable": false,
+      "private": false
+    },
+    "shoot_date": {
+      "type": "date",
+      "configurable": false,
+      "private": false
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false,
+      "private": false
+    },
+    "is_private": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false,
+      "private": false
+    },
+    "display_order": {
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "configurable": false,
+      "private": false
+    },
+    "photos": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::photo.photo",
+      "mappedBy": "albums"
+    }
+  }
+}

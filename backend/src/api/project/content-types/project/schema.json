@@ -1,0 +1,111 @@
+{
+  "kind": "collectionType",
+  "collectionName": "projects",
+  "info": {
+    "singularName": "project",
+    "pluralName": "projects",
+    "displayName": "Project",
+    "description": "技术项目展示"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "description": {
+      "type": "text",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "content": {
+      "type": "blocks",
+      "configurable": false,
+      "private": false
+    },
+    "featured_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ],
+      "configurable": false,
+      "private": false
+    },
+    "featured_video": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "videos"
+      ],
+      "configurable": false,
+      "private": false
+    },
+    "featured_audio": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "audios"
+      ],
+      "configurable": false,
+      "private": false
+    },
+    "tech_stack": {
+      "type": "json",
+      "configurable": false,
+      "private": false
+    },
+    "project_url": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+",
+      "configurable": false,
+      "private": false
+    },
+    "github_url": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+",
+      "configurable": false,
+      "private": false
+    },
+    "project_status": {
+      "type": "enumeration",
+      "enum": [
+        "In_Progress",
+        "Completed",
+        "Paused"
+      ],
+      "default": "In_Progress",
+      "configurable": false,
+      "private": false
+    },
+    "display_order": {
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "configurable": false,
+      "private": false
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false,
+      "private": false
+    }
+  }
+}

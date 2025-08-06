@@ -1,0 +1,101 @@
+{
+  "kind": "collectionType",
+  "collectionName": "albums",
+  "info": {
+    "singularName": "album",
+    "pluralName": "albums",
+    "displayName": "Album",
+    "description": "音乐专辑收藏"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "artist": {
+      "type": "string",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "cover_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"],
+      "configurable": false,
+      "private": false
+    },
+    "cover_video": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["videos"],
+      "configurable": false,
+      "private": false
+    },
+    "release_year": {
+      "type": "integer",
+      "configurable": false,
+      "private": false
+    },
+    "genre": {
+      "type": "string",
+      "configurable": false,
+      "private": false
+    },
+    "personal_rating": {
+      "type": "decimal",
+      "min": 0,
+      "max": 10,
+      "configurable": false,
+      "private": false
+    },
+    "review": {
+      "type": "blocks",
+      "configurable": false,
+      "private": false
+    },
+    "spotify_url": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+",
+      "configurable": false,
+      "private": false
+    },
+    "apple_music_url": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+",
+      "configurable": false,
+      "private": false
+    },
+    "favorite_track": {
+      "type": "string",
+      "configurable": false,
+      "private": false
+    },
+    "listen_date": {
+      "type": "date",
+      "configurable": false,
+      "private": false
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false,
+      "private": false
+    },
+    "display_order": {
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "configurable": false,
+      "private": false
+    }
+  }
+}
