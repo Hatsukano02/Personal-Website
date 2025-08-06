@@ -113,7 +113,7 @@ const TextFloatAnimation: React.FC<TextFloatAnimationProps> = ({
   // 将replay方法暴露给父组件
   useEffect(() => {
     if (containerRef.current) {
-      // @ts-ignore - 添加replay方法到元素上供外部调用
+      // @ts-expect-error - 添加replay方法到元素上供外部调用
       containerRef.current.replay = replay;
     }
   }, []);

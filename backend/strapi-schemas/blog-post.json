@@ -1,0 +1,92 @@
+{
+  "kind": "collectionType",
+  "collectionName": "blog_posts",
+  "info": {
+    "singularName": "blog-post",
+    "pluralName": "blog-posts",
+    "displayName": "Blog Post",
+    "description": "博客文章"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "content": {
+      "type": "richtext",
+      "required": true,
+      "configurable": false,
+      "private": false
+    },
+    "excerpt": {
+      "type": "text",
+      "configurable": false,
+      "private": false
+    },
+    "featured_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"],
+      "configurable": false,
+      "private": false
+    },
+    "featured_video": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["videos"],
+      "configurable": false,
+      "private": false
+    },
+    "featured_audio": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["audios"],
+      "configurable": false,
+      "private": false
+    },
+    "reading_time": {
+      "type": "integer",
+      "configurable": false,
+      "private": false
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false,
+      "private": false
+    },
+    "publish_date": {
+      "type": "datetime",
+      "configurable": false,
+      "private": false
+    },
+    "view_count": {
+      "type": "integer",
+      "default": 0,
+      "configurable": false,
+      "private": false
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "blog_posts"
+    }
+  }
+}

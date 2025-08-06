@@ -18,6 +18,7 @@ import {
 } from '@/components/sections'
 import { FloatingNav } from '@/components/layouts/FloatingNav'
 import { ThemeControls } from '@/components/layouts/ThemeControls'
+import { APITestPanel } from '@/components/debug/APITestPanel'
 import { useNavigationStore } from '@/stores/navigationStore'
 import { useScroll } from '@/lib/hooks/useScroll'
 
@@ -89,6 +90,9 @@ export default function HomePage() {
       
       {/* 主题控制 */}
       <ThemeControls />
+      
+      {/* API 测试面板（仅开发环境） */}
+      <APITestPanel />
     </main>
   )
 }
