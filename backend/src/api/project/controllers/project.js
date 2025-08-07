@@ -4,6 +4,27 @@
  * project controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+module.exports = {
+  async find(ctx) {
+    return await strapi.entityService.findMany('api::project.project', {
+      ...ctx.query,
+      populate: {
+        featured_image: true,
+        technology_stack: true,
+      },
+      sort: { created_at: 'desc' },
+    });
+  },
 
-module.exports = createCoreController('api::project.project');
+  async findOne(ctx) {
+    const { id } = ctx.params;
+    return await strapi.entityService.findOne('api::project.project', id, {
+      ...ctx.query,
+      populate: {
+        featured_image: true,
+        technology_stack: true,
+        gallery: true,
+      },
+    });
+  },
+};

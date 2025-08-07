@@ -127,14 +127,14 @@ NEXT_PUBLIC_UPLOADS_URL=/uploads
 **文件**: `src/types/api/strapi.ts`
 
 ```typescript
-// 基于 Strapi 5.19.0 实际响应结构
-// Strapi 单个资源响应
+// ⚠️ 修正: 基于 Strapi 5.x 官方文档的实际响应结构
+// Strapi 单个资源响应 (修正版)
 interface StrapiResponse<T> {
   data: T & StrapiEntity;
   meta: Record<string, any>;
 }
 
-// Strapi 集合响应
+// Strapi 集合响应 (修正版)
 interface StrapiCollectionResponse<T> {
   data: Array<T & StrapiEntity>;
   meta: {
@@ -147,15 +147,15 @@ interface StrapiCollectionResponse<T> {
   };
 }
 
-// Strapi 实体基础字段 (Strapi 5.x)
+// ⚠️ 修正: Strapi 5.x 实体基础字段 (基于官方文档)
 interface StrapiEntity {
-  id: number;
-  documentId: string; // Strapi 5.x 新增
-  createdAt: string;
-  updatedAt: string;
-  publishedAt?: string;
-  locale?: string;
-  localizations?: StrapiEntity[];
+  id: number; // 仍然存在，用于向后兼容
+  documentId: string; // Strapi 5.x 的主要标识符
+  createdAt: string; // ISO 8601 格式
+  updatedAt: string; // ISO 8601 格式
+  publishedAt?: string; // 仅在内容类型启用draft & publish时存在
+  locale?: string; // 仅在启用i18n时存在
+  localizations?: StrapiEntity[]; // 仅在启用i18n时存在
 }
 
 // 文件上传类型 (基于实际 PluginUploadFile)
@@ -706,16 +706,16 @@ const fallbackStrategies = {
 
 ### 12.1 个人网站安全策略
 
-**简化的安全模型**（个人网站无用户认证系统）:
+**⚠️ 修正: 基于Strapi 5.x Users & Permissions插件的安全模型**:
 
 ```typescript
-// API 客户端安全配置
+// API 客户端安全配置 (修正版)
 const securityConfig = {
   // HTTPS 强制（生产环境）
   httpsOnly: process.env.NODE_ENV === 'production',
   
-  // API 密钥（如果 Strapi 需要）
-  apiKey: process.env.NEXT_PUBLIC_STRAPI_API_KEY,
+  // ⚠️ 修正: Strapi 5.x不需要API密钥，通过Public角色权限控制
+  // 删除: apiKey: process.env.NEXT_PUBLIC_STRAPI_API_KEY,
   
   // 请求头安全
   headers: {
@@ -723,8 +723,21 @@ const securityConfig = {
     'X-Requested-With': 'XMLHttpRequest',
   },
   
-  // 跨域配置
-  withCredentials: false, // 个人网站无需认证
+  // ⚠️ 修正: Strapi 5.x CORS配置通过中间件处理
+  withCredentials: false,
+};
+
+// ⚠️ 新增: Strapi 5.x权限配置要求
+const STRAPI_PERMISSIONS_REQUIREMENTS = {
+  // Users & Permissions插件中的Public角色需要配置:
+  publicRole: {
+    // 对每个Content Type需要在Public角色中启用以下权限:
+    permissions: [
+      'find', // 获取列表
+      'findOne', // 获取单个资源
+    ],
+    // 注意: Strapi 5.x中不再有APPLICATION部分，直接在角色权限中配置
+  },
 };
 ```
 
@@ -796,12 +809,14 @@ const getApiConfig = () => {
 
 ### 阶段 1：基础架构实现 🔥 **立即执行**
 
-> **重要发现**: Strapi 内容类型已全部完成 (8/8)！
+> **⚠️ 修正状态**: Strapi 内容类型已全部完成 (8/8)，但存在配置问题！
 
-1. **API 客户端实现**
-   - 基于实际 8 个 API 端点配置 Axios
+1. **⚠️ 修正: API 客户端实现和权限配置**
+   - ✅ 基于实际 8 个 API 端点配置 Axios
+   - 🚨 **优先级1**: 修复CORS中间件配置错误 (移除`enabled: true`)
+   - 🚨 **优先级2**: 配置Users & Permissions插件的Public角色权限
+   - 🚨 **优先级3**: 验证所有API端点在修复后的实际响应结构
    - 测试现有 Social Links API (已有3条数据)
-   - 验证 Strapi 5.19.0 的实际响应结构
 
 2. **类型定义完善**
    - 根据实际字段配置更新类型
@@ -839,26 +854,229 @@ const getApiConfig = () => {
    - 加载状态优化
    - 开发工具集成
 
-## 16. 下一步行动
+## 16. 🚨 重要修正和问题解决方案 (v3.2)
 
-**立即执行**:
-1. ✅ **Strapi 内容类型已完成** - 8/8 个类型全部可用
-2. 🚨 测试现有 Social Links API（已有3条数据）
-3. 🚨 实现基础 API 客户端配置
-4. 🚨 创建第一个 API 服务（socialLinks.ts）
+### 16.1 官方文档核对结果
 
-**文档维护**:
-- 根据实际 Strapi API 测试结果更新类型定义
-- 记录环境配置的实际测试结果
-- 更新实施进度到 todo.md
+经过与Strapi 5.x官方文档的系统性核对，发现以下关键问题：
+
+#### 16.1.1 关键发现
+- **CORS配置错误**: 后端`middlewares.ts`中的`enabled: true`配置导致Content API无法初始化
+- **权限配置遗漏**: 缺少Users & Permissions插件的Public角色权限配置说明
+- **响应格式细节**: Relations字段返回count对象而非数组，需要特殊处理
+- **媒体文件URL处理**: 需要正确的图片URL构建和CSP策略配置
+- **Populate查询规范**: 关联数据查询需要正确的参数格式
+
+#### 16.1.2 已修正问题
+1. **✅ CORS中间件配置**: 移除了不兼容的`enabled: true`选项
+2. **✅ API路由定义**: 确认手动路由定义方式正确
+3. **✅ 类型系统**: 更新了安全策略和权限配置要求
+4. **✅ 实施计划**: 调整优先级，优先解决配置问题
+5. **✅ 深度技术细节**: 补充了Relations、媒体处理、权限系统等关键实现细节
+
+#### 16.1.3 待解决配置
+- **🔴 高优先级**: Users & Permissions插件Public角色权限配置
+- **🔴 高优先级**: Relations字段响应格式处理
+- **🟡 中优先级**: 媒体文件URL处理和CSP策略
+- **🟡 中优先级**: 验证所有API端点在修正后的实际响应
+- **🟢 低优先级**: 完善错误处理和缓存策略
+
+### 16.2 关键技术实现细节修正
+
+#### 16.2.1 Relations字段响应格式处理
+
+**⚠️ 重要发现**: Strapi 5.x中Relations字段初始响应为count对象：
+
+```typescript
+// Relations字段的实际响应格式
+interface RelationFieldResponse {
+  my_relations: {
+    count: number;
+  }
+}
+
+// 需要的转换逻辑
+const transformRelationsResponse = (data: any) => {
+  const transformed = { ...data };
+  
+  // 识别Relations字段并转换
+  Object.keys(transformed).forEach(key => {
+    if (transformed[key] && typeof transformed[key] === 'object' && 'count' in transformed[key]) {
+      // Relations字段处理：保留count信息，但准备数组结构
+      transformed[key] = {
+        count: transformed[key].count,
+        items: [] // 后续通过populate获取实际数据
+      };
+    }
+  });
+  
+  return transformed;
+};
+```
+
+#### 16.2.2 媒体文件URL处理优化
+
+**⚠️ 安全配置**: 需要更新CSP策略支持媒体文件：
+
+```typescript
+// middlewares.ts 安全配置更新
+const securityConfig = {
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      'connect-src': ["'self'", 'https:'],
+      'img-src': ["'self'", 'data:', 'blob:', process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'],
+      'media-src': ["'self'", 'data:', 'blob:', process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'],
+      upgradeInsecureRequests: null,
+    },
+  },
+};
+
+// 图片URL处理函数
+const buildMediaURL = (file: StrapiFile) => {
+  if (!file?.url) return null;
+  
+  // 如果是完整URL，直接返回
+  if (file.url.startsWith('http')) {
+    return file.url;
+  }
+  
+  // 构建完整URL
+  const baseURL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
+  return `${baseURL}${file.url}`;
+};
+```
+
+#### 16.2.3 Populate查询规范
+
+**⚠️ 查询参数规范**: Strapi 5.x的populate语法：
+
+```typescript
+// 正确的populate查询格式
+const queryParams: StrapiQueryParams = {
+  populate: {
+    // 单个字段
+    featured_image: true,
+    
+    // 多个媒体字段
+    featured_image: true,
+    featured_video: true,
+    
+    // 关联字段
+    tags: {
+      fields: ['name', 'slug'],
+    },
+    
+    // 深层关联
+    cover_photo: {
+      populate: {
+        image: true,
+        albums: {
+          fields: ['album_name', 'slug']
+        }
+      }
+    }
+  },
+  
+  // 字段选择
+  fields: ['title', 'slug', 'description', 'publishedAt'],
+  
+  // 过滤和排序
+  filters: {
+    is_active: { $eq: true },
+    publishedAt: { $notNull: true }
+  },
+  
+  sort: ['display_order:asc', 'publishedAt:desc']
+};
+```
+
+### 16.3 权限配置完整指南
+
+#### 16.3.1 Users & Permissions插件配置步骤
+
+**🚨 关键操作**（需要用户在Strapi管理后台执行）：
+
+1. **访问权限设置**:
+   - 登录Strapi管理后台
+   - 导航至：设置 → 用户和权限 → 角色 → Public
+
+2. **为每个内容类型启用权限**:
+   ```
+   内容类型: Album (api::album.album)
+   ✅ find (获取列表)
+   ✅ findOne (获取单个)
+   
+   内容类型: Blog-post (api::blog-post.blog-post)
+   ✅ find
+   ✅ findOne
+   
+   内容类型: Media-work (api::media-work.media-work)
+   ✅ find
+   ✅ findOne
+   
+   内容类型: Photo (api::photo.photo)
+   ✅ find
+   ✅ findOne
+   
+   内容类型: Photo-album (api::photo-album.photo-album)
+   ✅ find
+   ✅ findOne
+   
+   内容类型: Project (api::project.project)
+   ✅ find
+   ✅ findOne
+   
+   内容类型: Social-link (api::social-link.social-link)
+   ✅ find
+   ✅ findOne
+   
+   内容类型: Tag (api::tag.tag)
+   ✅ find
+   ✅ findOne
+   ```
+
+3. **保存配置**: 点击保存按钮应用权限更改
+
+#### 16.3.2 权限验证方法
+
+```bash
+# 测试API端点可访问性
+curl -X GET "http://localhost:1337/api/social-links" \
+  -H "Content-Type: application/json"
+
+# 预期响应: 200 OK with data
+# 错误响应: 403 Forbidden (权限未配置)
+```
+
+### 16.4 下一步行动计划
+
+**🚨 立即执行（用户需协助）**:
+1. **配置Public角色权限**: 按照16.3.1节步骤配置所有内容类型权限
+2. **验证CORS修复**: 重启Strapi服务，确认Content API endpoints (/api/*)可访问
+3. **API连接测试**: 使用前端debug工具验证API连接正常
+4. **Relations响应格式测试**: 验证包含关联字段的API响应格式
+
+**📋 后续开发**:
+5. 🚨 实现基础 API 客户端配置（包含Relations处理）
+6. 🚨 创建第一个 API 服务（socialLinks.ts）
+7. 🚨 实现媒体文件URL处理工具
+8. 📝 集成到现有前端组件
+
+**📚 文档维护**:
+- ✅ API集成设计文档已修正关键错误和技术细节
+- 📝 根据实际测试结果更新最终配置
+- 📝 更新项目进度到 todo.md
 
 ---
 
-**文档版本**: v3.0  
+**文档版本**: v3.2  
 **创建日期**: 2025-08-05  
-**更新日期**: 2025-08-05  
+**更新日期**: 2025-08-07  
 **维护人**: Claude  
 **更新记录**: 
 - v1.0: 初始设计文档
 - v2.0: 基于实际技术栈和项目状态全面修订
 - v3.0: **基于 phase_config_docs 实际数据结构更新**，8 个 Strapi 内容类型已完成，更新 API 端点、字段结构和枚举值映射
+- v3.1: **🚨 重要修正**: 基于Strapi 5.x官方文档系统性修正类型定义、响应格式、权限配置和安全策略，修复CORS配置错误和权限设置问题
+- v3.2: **🔍 深度技术细节完善**: 补充Relations字段响应格式处理、媒体文件URL构建、Populate查询规范、权限配置完整指南等关键技术实现细节

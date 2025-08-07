@@ -96,8 +96,8 @@ class APIClient {
     );
   }
 
-  private transformError(error: unknown): APIError {
-    if (error.response) {
+  private transformError(error: any): APIError {
+    if (error?.response) {
       // 服务器返回错误状态码
       const { status, data } = error.response;
       return new APIError(
@@ -106,7 +106,7 @@ class APIClient {
         data?.error?.name || 'API_ERROR',
         data?.error?.details || data
       );
-    } else if (error.request) {
+    } else if (error?.request) {
       // 请求发送但无响应
       return new APIError(
         'Network Error',
@@ -117,7 +117,7 @@ class APIClient {
     } else {
       // 其他错误
       return new APIError(
-        error.message || 'Unknown Error',
+        error?.message || 'Unknown Error',
         0,
         'UNKNOWN_ERROR',
         error

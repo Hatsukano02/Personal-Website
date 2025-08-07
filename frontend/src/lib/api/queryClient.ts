@@ -47,4 +47,32 @@ export const cacheConfig = {
     staleTime: 6 * 60 * 60 * 1000, // 6小时
     gcTime: 12 * 60 * 60 * 1000, // 12小时
   },
+  
+  // 标签系统
+  tags: {
+    staleTime: 24 * 60 * 60 * 1000, // 24小时
+    gcTime: 48 * 60 * 60 * 1000, // 48小时
+  },
 } as const;
+
+// 预加载关键数据的辅助函数
+export async function prefetchCriticalData() {
+  // 这里可以预加载首屏需要的关键数据
+  // 例如：社交链接、精选项目等
+  // 具体实现将在各个服务中定义
+}
+
+// 清除所有缓存的辅助函数
+export function clearAllCache() {
+  queryClient.clear();
+}
+
+// 使某个查询失效的辅助函数
+export function invalidateQueries(queryKey: unknown[]) {
+  return queryClient.invalidateQueries({ queryKey });
+}
+
+// 重新获取某个查询的辅助函数
+export function refetchQueries(queryKey: unknown[]) {
+  return queryClient.refetchQueries({ queryKey });
+}

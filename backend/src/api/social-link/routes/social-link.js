@@ -4,6 +4,23 @@
  * social-link router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
-
-module.exports = createCoreRouter('api::social-link.social-link');
+module.exports = {
+  routes: [
+    {
+      method: 'GET',
+      path: '/social-links',
+      handler: 'social-link.find',
+      config: {
+        auth: false,
+      }
+    },
+    {
+      method: 'GET', 
+      path: '/social-links/:id',
+      handler: 'social-link.findOne',
+      config: {
+        auth: false,
+      }
+    }
+  ]
+};
