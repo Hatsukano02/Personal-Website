@@ -1,5 +1,5 @@
 export default () => ({
-  'users-permissions': {
+  "users-permissions": {
     config: {
       ratelimit: {
         interval: 60000,

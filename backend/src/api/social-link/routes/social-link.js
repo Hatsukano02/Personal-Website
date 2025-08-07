@@ -1,26 +1,18 @@
-'use strict';
+"use strict";
 
 /**
  * social-link router
  */
 
-module.exports = {
-  routes: [
-    {
-      method: 'GET',
-      path: '/social-links',
-      handler: 'social-link.find',
-      config: {
-        auth: false,
-      }
+const { createCoreRouter } = require("@strapi/strapi").factories;
+
+module.exports = createCoreRouter("api::social-link.social-link", {
+  config: {
+    find: {
+      auth: false,
     },
-    {
-      method: 'GET', 
-      path: '/social-links/:id',
-      handler: 'social-link.findOne',
-      config: {
-        auth: false,
-      }
-    }
-  ]
-};
+    findOne: {
+      auth: false,
+    },
+  },
+});

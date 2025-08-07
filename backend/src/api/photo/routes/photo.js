@@ -1,9 +1,18 @@
-'use strict';
+"use strict";
 
 /**
  * photo router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+const { createCoreRouter } = require("@strapi/strapi").factories;
 
-module.exports = createCoreRouter('api::photo.photo');
+module.exports = createCoreRouter("api::photo.photo", {
+  config: {
+    find: {
+      auth: false,
+    },
+    findOne: {
+      auth: false,
+    },
+  },
+});

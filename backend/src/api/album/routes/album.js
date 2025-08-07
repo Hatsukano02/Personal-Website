@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 /**
  * album router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+const { createCoreRouter } = require("@strapi/strapi").factories;
 
-module.exports = createCoreRouter('api::album.album');
+module.exports = createCoreRouter("api::album.album");

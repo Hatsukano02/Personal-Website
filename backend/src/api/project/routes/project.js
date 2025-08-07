@@ -1,26 +1,18 @@
-'use strict';
+"use strict";
 
 /**
  * project router
  */
 
-module.exports = {
-  routes: [
-    {
-      method: 'GET',
-      path: '/projects',
-      handler: 'project.find',
-      config: {
-        auth: false,
-      }
+const { createCoreRouter } = require("@strapi/strapi").factories;
+
+module.exports = createCoreRouter("api::project.project", {
+  config: {
+    find: {
+      auth: false,
     },
-    {
-      method: 'GET',
-      path: '/projects/:id', 
-      handler: 'project.findOne',
-      config: {
-        auth: false,
-      }
-    }
-  ]
-};
+    findOne: {
+      auth: false,
+    },
+  },
+});
