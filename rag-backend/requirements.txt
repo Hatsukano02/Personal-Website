@@ -1,0 +1,30 @@
+# FastAPI核心
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+python-multipart==0.0.20
+
+# OpenAI API
+openai==1.57.2
+
+# 数据处理和配置
+pydantic==2.10.4
+pydantic-settings==2.7.0
+
+# 限流和缓存
+slowapi==0.1.9
+cachetools==5.5.0
+
+# HTTP客户端
+httpx==0.28.1
+
+# 日志处理
+loguru==0.7.3
+
+# 开发和测试工具
+pytest==8.3.4
+pytest-asyncio==0.25.0
+pytest-cov==6.0.0
+mypy==1.14.0
+
+# 邮箱验证（可选）
+email-validator==2.2.0

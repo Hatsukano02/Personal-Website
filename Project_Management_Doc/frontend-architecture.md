@@ -37,7 +37,7 @@ src/
 
 ### 主页分段设计
 1. **Hero Section** - 开场动画区域
-2. **About Section** - 个人简介与技能
+2. **About Section** - 个人简介与技能（集成 RAG 聊天机器人）
 3. **Projects Section** - 技术项目展示
 4. **Photography Section** - 摄影作品集
 5. **Blog Section** - 最新文章预览

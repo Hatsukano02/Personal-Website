@@ -65,7 +65,7 @@ PersonalWebsite/
 
 ### 后端架构
 
-- **CMS**: Strapi 4.x 自托管
+- **CMS**: Strapi 5.x 自托管
 - **数据库**: PostgreSQL
 - **内容类型**: Blog Post、Project、Photo、Album、Movie、Media、Social Links
 - **文件存储**: 本地文件系统 + 图片处理(Sharp)
@@ -89,6 +89,7 @@ PersonalWebsite/
 - `execution-roadmap.md` - 项目执行路线图
 - `database-design.md` - 数据库设计方案
 - `animation-solution.md` - 动画解决方案
+- `rag-chatbot-architecture.md` - RAG聊天机器人架构方案（已冻结）
 
 ### 项目快照文档 (docs/)
 
@@ -131,6 +132,33 @@ Strapi 后端管理的内容类型：
 - 社交媒体链接
 
 每种内容类型支持关系映射、元数据和文件附件，针对网络传输进行优化。
+
+## RAG 聊天机器人架构
+
+### 技术栈
+
+- **后端框架**: FastAPI v0.115.x + Python 3.9+
+- **向量数据库**: ChromaDB v0.5.x (2GB RAM 最低要求)
+- **LLM**: OpenAI GPT-4.1 mini (1M+ token 上下文窗口)
+- **嵌入模型**: OpenAI text-embedding-3-small
+- **部署**: Docker 容器化，与 Strapi 共享 VPS
+
+### 开发命令
+
+#### RAG 后端 (./rag-backend/)
+
+- `pip install -r requirements.txt` - 安装依赖
+- `uvicorn main:app --reload` - 开发模式启动
+- `docker build -t rag-chatbot .` - 构建 Docker 镜像
+- `docker run -p 8000:8000 rag-chatbot` - 运行容器
+
+### 核心特性
+
+- **阅后即焚设计**: 对话不持久化，每次会话独立
+- **RAG 检索增强**: 基于个人知识库的上下文回答
+- **成本优化**: GPT-4.1 mini ($0.40/$1.60 per 1M tokens)
+- **限流保护**: 3 queries/min, 5 rounds/session
+- **分块策略**: 1500 tokens/chunk 充分利用大上下文窗口
 
 ## 开发注意事项
 

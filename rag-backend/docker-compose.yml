@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  rag-chatbot:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=gpt-4.1-mini
+      - OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+      - CHROMA_PERSIST_DIRECTORY=/app/chroma_db
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - LOG_LEVEL=INFO
+      - CORS_ORIGINS=["http://localhost:3000", "https://yourdomain.com"]
+    volumes:
+      - ./chroma_db:/app/chroma_db
+      - ./knowledge_base:/app/knowledge_base
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  default:
+    name: rag-chatbot-network
