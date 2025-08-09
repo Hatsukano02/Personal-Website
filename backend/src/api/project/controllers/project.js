@@ -1,30 +1,34 @@
-'use strict';
+"use strict";
 
 /**
  * project controller
  */
 
-module.exports = {
+const { createCoreController } = require("@strapi/strapi").factories;
+
+module.exports = createCoreController("api::project.project", ({ strapi }) => ({
   async find(ctx) {
-    return await strapi.entityService.findMany('api::project.project', {
+    return await strapi.documents("api::project.project").findMany({
       ...ctx.query,
       populate: {
         featured_image: true,
-        technology_stack: true,
+        featured_video: true,
+        featured_audio: true,
       },
-      sort: { created_at: 'desc' },
+      sort: { createdAt: "desc" },
     });
   },
 
   async findOne(ctx) {
     const { id } = ctx.params;
-    return await strapi.entityService.findOne('api::project.project', id, {
+    return await strapi.documents("api::project.project").findOne({
+      documentId: id,
       ...ctx.query,
       populate: {
         featured_image: true,
-        technology_stack: true,
-        gallery: true,
+        featured_video: true,
+        featured_audio: true,
       },
     });
   },
-};
+}));

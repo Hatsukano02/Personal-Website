@@ -4,9 +4,11 @@
  * social-link controller
  */
 
-module.exports = {
+const { createCoreController } = require('@strapi/strapi').factories;
+
+module.exports = createCoreController('api::social-link.social-link', ({ strapi }) => ({
   async find(ctx) {
-    return await strapi.entityService.findMany('api::social-link.social-link', {
+    return await strapi.documents('api::social-link.social-link').findMany({
       ...ctx.query,
       filters: {
         is_active: true,
@@ -18,8 +20,9 @@ module.exports = {
 
   async findOne(ctx) {
     const { id } = ctx.params;
-    return await strapi.entityService.findOne('api::social-link.social-link', id, {
+    return await strapi.documents('api::social-link.social-link').findOne({
+      documentId: id,
       ...ctx.query,
     });
   },
-};
+}));
