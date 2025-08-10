@@ -5,23 +5,16 @@ import { socialLinksService } from '@/lib/api/services/socialLinks';
 import { queryKeys } from '@/lib/api/queryKeys';
 import { cacheConfig } from '@/lib/api/queryClient';
 import type {
-  SocialLink,
-  StrapiCollectionResponse,
-  StrapiResponse,
   QueryParams,
 } from '@/types/api';
 
 // Hook 选项接口
 interface UseSocialLinksOptions {
   enabled?: boolean;
-  onSuccess?: (data: StrapiCollectionResponse<SocialLink>) => void;
-  onError?: (error: Error) => void;
 }
 
 interface UseSocialLinkOptions {
   enabled?: boolean;
-  onSuccess?: (data: StrapiResponse<SocialLink>) => void;
-  onError?: (error: Error) => void;
 }
 
 // 获取所有社交链接
@@ -34,8 +27,6 @@ export function useSocialLinks(
     queryFn: () => socialLinksService.getAll(params),
     ...cacheConfig.socialLinks,
     enabled: options?.enabled,
-    onSuccess: options?.onSuccess,
-    onError: options?.onError,
   });
 }
 
@@ -46,8 +37,6 @@ export function useActiveSocialLinks(options?: UseSocialLinksOptions) {
     queryFn: () => socialLinksService.getActive(),
     ...cacheConfig.socialLinks,
     enabled: options?.enabled,
-    onSuccess: options?.onSuccess,
-    onError: options?.onError,
   });
 }
 
@@ -62,8 +51,6 @@ export function useSocialLink(
     queryFn: () => socialLinksService.getById(id, params),
     ...cacheConfig.socialLinks,
     enabled: !!id && options?.enabled !== false,
-    onSuccess: options?.onSuccess,
-    onError: options?.onError,
   });
 }
 
@@ -77,8 +64,6 @@ export function useSocialLinksByPlatform(
     queryFn: () => socialLinksService.getByPlatform(platform),
     ...cacheConfig.socialLinks,
     enabled: !!platform && options?.enabled !== false,
-    onSuccess: options?.onSuccess,
-    onError: options?.onError,
   });
 }
 

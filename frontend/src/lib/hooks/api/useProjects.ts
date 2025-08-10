@@ -130,6 +130,7 @@ export function useInfiniteProjects(
           pageSize: 10, // 每页10个项目
         },
       }),
+    initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const { page, pageCount } = lastPage.meta.pagination;
       return page < pageCount ? page + 1 : undefined;

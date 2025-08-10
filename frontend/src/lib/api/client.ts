@@ -96,28 +96,28 @@ class APIClient {
     );
   }
 
-  private transformError(error: any): APIError {
-    if (error?.response) {
-      // 服务器返回错误状态码
-      const { status, data } = error.response;
+  private transformError(error: unknown): APIError {
+    if (error && typeof error === 'object' && 'response' in error && error.response) {
+      // 服务器返回错误状态码  
+      const { status, data } = (error as { response: { status: number; data: Record<string, unknown> } }).response;
       return new APIError(
-        data?.error?.message || data?.message || 'API Error',
+        (data?.error as Record<string, unknown>)?.message as string || (data?.message as string) || 'API Error',
         status,
-        data?.error?.name || 'API_ERROR',
-        data?.error?.details || data
+        (data?.error as Record<string, unknown>)?.name as string || 'API_ERROR',
+        (data?.error as Record<string, unknown>)?.details || data
       );
-    } else if (error?.request) {
+    } else if (error && typeof error === 'object' && 'request' in error) {
       // 请求发送但无响应
       return new APIError(
         'Network Error',
         0,
         'NETWORK_ERROR',
-        error.request
+        (error as { request: unknown }).request
       );
     } else {
       // 其他错误
       return new APIError(
-        error?.message || 'Unknown Error',
+        (error as { message?: string })?.message || 'Unknown Error',
         0,
         'UNKNOWN_ERROR',
         error

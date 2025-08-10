@@ -1,111 +1,191 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss";
 
 const config: Config & { safelist?: string[] } = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: 'class',
+  darkMode: "class",
   safelist: [
     // 确保自定义颜色被包含在构建中
-    'bg-light-background-primary',
-    'bg-light-background-secondary', 
-    'bg-light-background-tertiary',
-    'bg-dark-background-primary',
-    'bg-dark-background-secondary',
-    'bg-dark-background-tertiary',
-    'text-light-text-primary',
-    'text-light-text-secondary',
-    'text-light-text-muted',
-    'text-dark-text-primary',
-    'text-dark-text-secondary', 
-    'text-dark-text-muted',
-    'border-light-border-default',
-    'border-light-border-muted',
-    'border-dark-border-default',
-    'border-dark-border-muted'
+    "bg-light-background-primary",
+    "bg-light-background-secondary",
+    "bg-light-background-tertiary",
+    "bg-dark-background-primary",
+    "bg-dark-background-secondary",
+    "bg-dark-background-tertiary",
+    "text-light-text-primary",
+    "text-light-text-secondary",
+    "text-light-text-muted",
+    "text-dark-text-primary",
+    "text-dark-text-secondary",
+    "text-dark-text-muted",
+    "border-light-border-default",
+    "border-light-border-muted",
+    "border-dark-border-default",
+    "border-dark-border-muted",
+    // Chatbot相关的Tailwind类
+    "rounded-xl",
+    "rounded-2xl",
+    "font-medium",
+    "font-semibold",
+    "font-bold",
+    "animate-bounce",
+    "bg-blue-500",
+    "bg-blue-600",
+    "hover:bg-blue-600",
+    "text-blue-500",
+    "text-blue-100",
+    "bg-gray-50",
+    "bg-gray-100",
+    "bg-gray-200",
+    "bg-gray-700",
+    "bg-gray-800",
+    "bg-gray-900",
+    "hover:bg-gray-50",
+    "hover:bg-gray-300",
+    "hover:bg-gray-600",
+    "hover:bg-gray-700",
+    "text-gray-500",
+    "text-gray-600",
+    "text-gray-800",
+    "text-gray-300",
+    "text-gray-400",
+    "border-gray-200",
+    "border-gray-300",
+    "border-gray-600",
+    "border-gray-700",
+    "rounded-full",
+    "rounded-lg",
+    "rounded-xl",
+    "rounded-2xl",
+    "font-medium",
+    "shadow-lg",
+    "shadow-xl",
+    "shadow-2xl",
+    // 新Chatbot UI相关类
+    "backdrop-blur-md",
+    "bg-light-background-secondary/80",
+    "bg-white/10",
+    "bg-white/90",
+    "bg-gray-800/80",
+    "bg-gray-800/90",
+    "bg-gray-800",
+    "bg-black",
+    "bg-white",
+    "border-gray-800",
+    "border-white",
+    "text-gray-800",
+    "text-white",
+    "bg-gradient-to-br",
+    "from-blue-500",
+    "to-purple-600",
+    "from-purple-500",
+    "to-pink-600",
+    "from-pink-500",
+    "to-red-600",
+    "from-red-500",
+    "to-orange-600",
+    "grid-cols-2",
+    "md:grid-cols-4",
+    "gap-6",
+    "gap-8",
+    "mb-8",
+    "mb-12",
+    "h-40",
+    "aspect-[3/4]",
+    "w-80",
+    "w-96",
+    "px-6",
+    "py-3",
+    "py-4",
+    "w-12",
+    "h-12",
+    "w-14",
+    "h-14",
+    "mt-12",
+    "gap-4",
+    "max-w-6xl",
+    "max-h-96",
   ],
   theme: {
     extend: {
       colors: {
-        'light-primary': '#087E8B',
-        'light-secondary': '#C7FFDA', 
-        'light-accent': '#0A2342',
-        'light-background-primary': '#FEFEFE',
-        'light-background-secondary': '#F9FAFB',
-        'light-background-tertiary': '#F3F4F6',
-        'light-text-primary': '#1F2937',
-        'light-text-secondary': '#4B5563',
-        'light-text-muted': '#6B7280',
-        'light-border-default': '#1F2937',    // 日间模式：深色边框
-        'light-border-muted': '#374151',
-        
-        'dark-primary': '#4a8c8c',
-        'dark-secondary': '#fab062',
-        'dark-accent': '#011126', 
-        'dark-background-primary': '#1C1C1E',
-        'dark-background-secondary': '#2C2C2E',
-        'dark-background-tertiary': '#3A3A3C',
-        'dark-text-primary': '#F8FAFC',
-        'dark-text-secondary': '#CBD5E1',
-        'dark-text-muted': '#94A3B8',
-        'dark-border-default': '#F8FAFC',     // 夜间模式：白色边框
-        'dark-border-muted': '#E2E8F0',
-        
+        "light-primary": "#087E8B",
+        "light-secondary": "#C7FFDA",
+        "light-accent": "#0A2342",
+        "light-background-primary": "#FEFEFE",
+        "light-background-secondary": "#F9FAFB",
+        "light-background-tertiary": "#F3F4F6",
+        "light-text-primary": "#1F2937",
+        "light-text-secondary": "#4B5563",
+        "light-text-muted": "#6B7280",
+        "light-border-default": "#1F2937", // 日间模式：深色边框
+        "light-border-muted": "#374151",
+
+        "dark-primary": "#4a8c8c",
+        "dark-secondary": "#fab062",
+        "dark-accent": "#011126",
+        "dark-background-primary": "#1C1C1E",
+        "dark-background-secondary": "#2C2C2E",
+        "dark-background-tertiary": "#3A3A3C",
+        "dark-text-primary": "#F8FAFC",
+        "dark-text-secondary": "#CBD5E1",
+        "dark-text-muted": "#94A3B8",
+        "dark-border-default": "#F8FAFC", // 夜间模式：白色边框
+        "dark-border-muted": "#E2E8F0",
+
         // 特殊效果颜色
-        'old-gold': '#d9b70d'
+        "old-gold": "#d9b70d",
       },
       fontFamily: {
-        'sans': ['SourceHanSans-VF', 'PingFang SC', 'system-ui', 'sans-serif'],
-        'serif': ['SourceHanSerif-VF', 'PingFang SC', 'serif'],
-        'playful': ['SourceHanSans-VF', 'sans-serif'],
-        'variable': ['SourceHanSans-VF', 'system-ui', 'sans-serif']
+        sans: ["SourceHanSans-VF", "PingFang SC", "system-ui", "sans-serif"],
+        serif: ["SourceHanSerif-VF", "PingFang SC", "serif"],
+        playful: ["SourceHanSans-VF", "sans-serif"],
+        variable: ["SourceHanSans-VF", "system-ui", "sans-serif"],
       },
       fontWeight: {
-        'variable-light': '300',
-        'variable-normal': '400',
-        'variable-medium': '500',
-        'variable-semibold': '600',
-        'variable-bold': '700',
-        'variable-extrabold': '800',
-        'variable-black': '900'
+        "variable-light": "300",
+        "variable-normal": "400",
+        "variable-medium": "500",
+        "variable-semibold": "600",
+        "variable-bold": "700",
+        "variable-extrabold": "800",
+        "variable-black": "900",
       },
       spacing: {
-        '18': '4.5rem',
-        '88': '22rem'
+        "18": "4.5rem",
+        "88": "22rem",
       },
       height: {
-        'screen-dynamic': '100dvh'
+        "screen-dynamic": "100dvh",
       },
       animation: {
-        'fade-in': 'fadeIn 0.6s ease-out',
-        'slide-up': 'slideUp 0.8s ease-out',
-        'float': 'float 3s ease-in-out infinite'
+        "fade-in": "fadeIn 0.6s ease-out",
+        "slide-up": "slideUp 0.8s ease-out",
+        float: "float 3s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' }
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
         slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' }
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
         float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' }
-        }
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
       },
       backdropBlur: {
-        'xs': '2px'
-      }
-    }
+        xs: "2px",
+      },
+    },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography')
-  ]
-}
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
+};
 
-export default config
+export default config;

@@ -31,25 +31,27 @@ export async function testBasicConnection() {
   } catch (error) {
     console.error('❌ Connection failed:', error);
     
-    if (error.response) {
+    if (error && typeof error === 'object' && 'response' in error && error.response) {
+      const response = (error as { response: { status: number; statusText: string; data: unknown } }).response;
       console.error('📋 Response error:', {
-        status: error.response.status,
-        statusText: error.response.statusText,
-        data: error.response.data,
+        status: response.status,
+        statusText: response.statusText,
+        data: response.data,
       });
-    } else if (error.request) {
+    } else if (error && typeof error === 'object' && 'request' in error) {
+      const errorObj = error as { request: unknown; config?: { url?: string; method?: string } };
       console.error('📋 Request error:', {
         message: 'No response received',
-        url: error.config?.url,
-        method: error.config?.method,
+        url: errorObj.config?.url,
+        method: errorObj.config?.method,
       });
     } else {
-      console.error('📋 Setup error:', error.message);
+      console.error('📋 Setup error:', (error as { message?: string })?.message || 'Unknown error');
     }
     
     return {
       success: false,
-      error: error.message,
+      error: (error as { message?: string })?.message || 'Unknown error',
       details: error,
       url: `${baseURL}/social-links`
     };
@@ -84,7 +86,7 @@ export async function testCORS() {
     console.error('❌ CORS test failed:', error);
     return {
       success: false,
-      error: error.message
+      error: (error as { message?: string })?.message || 'Unknown error'
     };
   }
 }
@@ -105,7 +107,7 @@ export async function testAllEndpoints() {
   
   console.log('🔍 Testing all possible endpoints...');
   
-  const results = {};
+  const results: Record<string, { status?: number; statusText?: string; data?: string; error?: string }> = {};
   
   for (const endpoint of endpoints) {
     try {
@@ -130,9 +132,9 @@ export async function testAllEndpoints() {
       
     } catch (error) {
       results[endpoint] = {
-        error: error.message
+        error: (error as { message?: string })?.message || 'Unknown error'
       };
-      console.error(`❌ ${endpoint}: ${error.message}`);
+      console.error(`❌ ${endpoint}: ${(error as { message?: string })?.message || 'Unknown error'}`);
     }
   }
   
@@ -141,7 +143,7 @@ export async function testAllEndpoints() {
 
 // 挂载到window对象供调试使用
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-  (window as any).debugAPI = {
+  (window as Window & { debugAPI?: unknown }).debugAPI = {
     testBasicConnection,
     testCORS,
     testAllEndpoints,

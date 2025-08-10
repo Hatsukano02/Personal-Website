@@ -143,7 +143,7 @@ class SocialLinksService {
     Object.entries(filters).forEach(([key, value]) => {
       if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
         // 嵌套对象（如 { platform: { $eqi: 'github' } }）
-        this.buildFilterParams(searchParams, value, `${prefix}[${key}]`);
+        this.buildFilterParams(searchParams, value as Record<string, unknown>, `${prefix}[${key}]`);
       } else {
         // 基础值
         searchParams.set(`${prefix}[${key}]`, String(value));

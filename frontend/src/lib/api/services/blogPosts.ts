@@ -159,7 +159,7 @@ class BlogPostsService {
     }
 
     // 获取具有相同标签的文章
-    const tagIds = currentPost.data.tags.map(tag => tag.id);
+    const tagIds = currentPost.data.tags.map((tag) => (tag as unknown as { id: number }).id);
     
     return this.getAll({
       filters: {

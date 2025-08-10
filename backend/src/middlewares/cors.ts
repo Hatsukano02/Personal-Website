@@ -12,7 +12,7 @@ export default (config: any, { strapi }: { strapi: any }) => {
       ctx.set('Access-Control-Allow-Origin', origin);
     }
     
-    ctx.set('Access-Control-Allow-Headers', '*');
+    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma');
     ctx.set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
     ctx.set('Access-Control-Allow-Credentials', 'true');
     

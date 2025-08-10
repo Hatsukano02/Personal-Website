@@ -35,8 +35,9 @@ const nextConfig: NextConfig = {
   // API路由重写（代理到Strapi）
   async rewrites() {
     return [
+      // Strapi API代理
       {
-        source: "/api/:path*",
+        source: "/api/strapi/:path*",
         destination: "http://172.96.193.211:1337/api/:path*",
       },
       {

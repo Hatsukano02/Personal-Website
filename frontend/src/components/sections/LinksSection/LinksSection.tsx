@@ -6,6 +6,12 @@ import { Typography } from '@/components/ui/Typography'
 import { GlassCard } from '@/components/ui/GlassCard'
 import { useActiveSocialLinks } from '@/lib/hooks/api/useSocialLinks'
 import { useLanguageStore } from '@/stores/languageStore'
+import type { SocialLink, StrapiCollectionResponse } from '@/types/api'
+
+// 类型守卫函数
+function hasSocialLinksData(data: unknown): data is StrapiCollectionResponse<SocialLink> {
+  return Boolean(data && typeof data === 'object' && 'data' in data && Array.isArray((data as { data: unknown }).data))
+}
 
 interface LinksSectionProps {
   id: string
@@ -73,15 +79,25 @@ export default function LinksSection({ id }: LinksSectionProps) {
           </div>
         )}
 
+        {/* 空状态 */}
+        {!isLoading && !error && hasSocialLinksData(socialLinksResponse) && socialLinksResponse.data.length === 0 && (
+          <div className="text-center py-12">
+            <Typography variant="body" className="text-light-text-muted dark:text-dark-text-muted">
+              {t.empty}
+            </Typography>
+          </div>
+        )}
+
         {/* 社交链接列表 */}
-        {socialLinksResponse?.data && socialLinksResponse.data.length > 0 && (
+        {hasSocialLinksData(socialLinksResponse) && socialLinksResponse.data.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {socialLinksResponse.data.map((link) => (
-              <GlassCard
+              <div
                 key={link.id}
-                className="p-6 hover:scale-105 transition-transform duration-300 cursor-pointer group"
+                className="cursor-pointer group"
                 onClick={() => window.open(link.url, '_blank', 'noopener,noreferrer')}
               >
+                <GlassCard className="p-6 hover:scale-105 transition-transform duration-300">
                 <div className="flex items-center space-x-4">
                   <div className="flex-shrink-0 text-light-primary dark:text-dark-primary group-hover:scale-110 transition-transform duration-300">
                     {getPlatformIcon()}
@@ -102,26 +118,9 @@ export default function LinksSection({ id }: LinksSectionProps) {
                   </div>
                   <ExternalLink className="w-4 h-4 text-light-text-muted dark:text-dark-text-muted group-hover:text-light-primary dark:group-hover:text-dark-primary transition-colors duration-300" />
                 </div>
-              </GlassCard>
+                </GlassCard>
+              </div>
             ))}
-          </div>
-        )}
-
-        {/* 空状态 */}
-        {socialLinksResponse?.data && socialLinksResponse.data.length === 0 && (
-          <div className="text-center py-12">
-            <Typography variant="body" className="text-light-text-muted dark:text-dark-text-muted">
-              {t.empty}
-            </Typography>
-          </div>
-        )}
-
-        {/* 开发环境调试信息 */}
-        {process.env.NODE_ENV === 'development' && socialLinksResponse && (
-          <div className="mt-8 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg text-left">
-            <Typography variant="caption" className="font-mono text-gray-600 dark:text-gray-400">
-              API Response: {socialLinksResponse.data.length} links loaded
-            </Typography>
           </div>
         )}
       </div>

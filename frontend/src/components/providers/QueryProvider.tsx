@@ -15,9 +15,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
       {/* React Query 开发工具（仅在开发环境显示） */}
       {process.env.NODE_ENV === 'development' && (
         <ReactQueryDevtools 
-          initialIsOpen={false} 
-          position="bottom-right"
-          buttonPosition="bottom-right"
+          initialIsOpen={false}
         />
       )}
     </QueryClientProvider>
