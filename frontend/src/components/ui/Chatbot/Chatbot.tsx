@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Camera, Music, Film, PenTool, ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import TextFloatAnimation from "@/components/animations/TextFloatAnimation/TextFloatAnimation";
 import { ChatbotProps } from "./Chatbot.types";
 
 // 扩展 HTMLElement 类型以包含鼠标移动清理函数
@@ -655,7 +656,17 @@ const Chatbot: React.FC<ChatbotProps> = ({
                   >
                     {message.role === "user" ? "你：" : "AI："}
                   </span>
-                  <span className="ml-2">{message.content}</span>
+                  <span className="ml-2">
+                    {message.role === "assistant" ? (
+                      <TextFloatAnimation
+                        text={message.content}
+                        preset="typewriter"
+                        autoStart={true}
+                      />
+                    ) : (
+                      message.content
+                    )}
+                  </span>
                 </div>
                 <p
                   className={cn(
