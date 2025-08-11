@@ -17,7 +17,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
   return (
     <section
       id={id}
-      className="relative min-h-screen flex items-center justify-center bg-light-background-primary dark:bg-dark-background-primary"
+      className="relative min-h-screen flex items-start justify-center pt-20 bg-light-background-primary dark:bg-dark-background-primary"
     >
       {/* 微妙的渐变背景 */}
       <div className="absolute inset-0 bg-gradient-to-bl from-light-background-secondary via-light-background-tertiary to-light-background-primary dark:from-dark-background-secondary dark:via-dark-background-tertiary dark:to-dark-background-primary opacity-60"></div>

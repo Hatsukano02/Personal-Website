@@ -6,6 +6,11 @@ import { cn } from "@/lib/utils/cn";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { ChatbotProps } from "./Chatbot.types";
 
+// 扩展 HTMLElement 类型以包含鼠标移动清理函数
+interface HTMLElementWithCleanup extends HTMLElement {
+  mouseMoveCleanup?: () => void;
+}
+
 // 四个主题卡片的内容
 const THEME_CARDS = [
   {
@@ -87,10 +92,10 @@ const Chatbot: React.FC<ChatbotProps> = ({
   // 状态管理
   const [isFocused, setIsFocused] = useState(false); // 输入框是否获得焦点
   const [turnCount, setTurnCount] = useState(0);
-  const [hoveredCardIndex, setHoveredCardIndex] = useState<number | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // 鼠标响应动画 refs
   const animationFrameRef = useRef<number | null>(null);
@@ -122,7 +127,7 @@ const Chatbot: React.FC<ChatbotProps> = ({
       // 动画完成后隐藏卡片
       setTimeout(() => {
         setCardsVisible(false);
-      }, 1000); // 1秒后完全隐藏卡片
+      }, 1000); // 恢复原来的动画时间
     }
   };
 
@@ -210,8 +215,16 @@ const Chatbot: React.FC<ChatbotProps> = ({
 
     handleInputChange(syntheticEvent);
 
-    // 聚焦输入框并显示对话区域
-    setIsFocused(true);
+    // 处理卡片退出和标题移动
+    if (!isFocused && cardsVisible) {
+      setIsFocused(true);
+      onTitleMove?.(true);
+      setCardsExiting(true);
+      setTimeout(() => {
+        setCardsVisible(false);
+      }, 1000);
+    }
+
     inputRef.current?.focus();
 
     // 延迟提交
@@ -227,8 +240,6 @@ const Chatbot: React.FC<ChatbotProps> = ({
 
   // 处理卡片鼠标事件
   const handleCardMouseEnter = (index: number, e: React.MouseEvent) => {
-    setHoveredCardIndex(index);
-
     const cardElement = e.currentTarget as HTMLElement;
     const rect = cardElement.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -273,18 +284,17 @@ const Chatbot: React.FC<ChatbotProps> = ({
     };
 
     // 存储清理函数到元素上，以便mouse leave时清理
-    (cardElement as any).mouseMoveCleanup = cleanup;
+    (cardElement as HTMLElementWithCleanup).mouseMoveCleanup = cleanup;
   };
 
   const handleCardMouseLeave = (index: number, e: React.MouseEvent) => {
-    setHoveredCardIndex(null);
     targetScaleRefs.current[index] = 1;
 
     // 清理鼠标移动监听器
-    const cardElement = e.currentTarget as HTMLElement;
-    if ((cardElement as any).mouseMoveCleanup) {
-      (cardElement as any).mouseMoveCleanup();
-      delete (cardElement as any).mouseMoveCleanup;
+    const cardElement = e.currentTarget as HTMLElementWithCleanup;
+    if (cardElement.mouseMoveCleanup) {
+      cardElement.mouseMoveCleanup();
+      delete cardElement.mouseMoveCleanup;
     }
 
     if (!animationFrameRef.current) {
@@ -292,9 +302,19 @@ const Chatbot: React.FC<ChatbotProps> = ({
     }
   };
 
-  // 滚动到底部
+  // 滚动到底部 - 使用容器滚动而不是页面滚动，延迟执行避免布局跳动
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length > 0) {
+      // 使用 setTimeout 确保 DOM 更新完成后再滚动
+      const timer = setTimeout(() => {
+        if (messagesContainerRef.current) {
+          messagesContainerRef.current.scrollTop =
+            messagesContainerRef.current.scrollHeight;
+        }
+      }, 150); // 增加延迟确保容器完全渲染
+
+      return () => clearTimeout(timer);
+    }
   }, [messages]);
 
   // 阅后即焚逻辑
@@ -516,9 +536,14 @@ const Chatbot: React.FC<ChatbotProps> = ({
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto">
+    <div className="w-full max-w-6xl mx-auto relative flex flex-col h-[68vh]">
       {/* 上方：四个主题卡片区域 */}
-      <div className="mb-12 relative min-h-[400px]">
+      <div
+        className={cn(
+          "relative flex-shrink-0 transition-all duration-1000 ease-in-out",
+          cardsVisible ? "mb-8 min-h-[300px]" : "mb-0 min-h-0 overflow-hidden"
+        )}
+      >
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 absolute inset-0">
           {cardsVisible &&
             THEME_CARDS.map((card, index) => {
@@ -600,81 +625,94 @@ const Chatbot: React.FC<ChatbotProps> = ({
         </div>
       </div>
 
-      {/* 对话消息区域 - 直接显示在页面上，无框 */}
-      {(isFocused || messages.length > 0) && (
-        <div className="mb-8 space-y-4 transition-all duration-700 ease-in-out">
-          {messages.map((message) => (
-            <div key={message.id} className="w-full">
-              <div
-                className={cn(
-                  "text-base leading-relaxed",
-                  effectiveTheme === "dark" ? "text-white" : "text-gray-800"
-                )}
-              >
-                <span
+      {/* 对话消息区域 - 始终占据可用空间 */}
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto mb-6"
+        style={{
+          scrollBehavior: "smooth",
+        }}
+      >
+        {messages.length > 0 && (
+          <div className="space-y-4">
+            {messages.map((message) => (
+              <div key={message.id} className="w-full">
+                <div
                   className={cn(
-                    "font-medium",
-                    message.role === "user"
-                      ? "text-blue-500"
-                      : effectiveTheme === "dark"
-                      ? "text-gray-300"
-                      : "text-gray-600"
+                    "text-base leading-relaxed",
+                    effectiveTheme === "dark" ? "text-white" : "text-gray-800"
                   )}
                 >
-                  {message.role === "user" ? "你：" : "AI："}
-                </span>
-                <span className="ml-2">{message.content}</span>
-              </div>
-              <p
-                className={cn(
-                  "text-xs mt-1 opacity-50",
-                  effectiveTheme === "dark" ? "text-gray-400" : "text-gray-500"
-                )}
-              >
-                {formatTime(new Date())}
-              </p>
-            </div>
-          ))}
-
-          {isLoading && (
-            <div className="w-full">
-              <div
-                className={cn(
-                  "text-base leading-relaxed",
-                  effectiveTheme === "dark" ? "text-white" : "text-gray-800"
-                )}
-              >
-                <span
+                  <span
+                    className={cn(
+                      "font-medium",
+                      message.role === "user"
+                        ? "text-blue-500"
+                        : effectiveTheme === "dark"
+                        ? "text-gray-300"
+                        : "text-gray-600"
+                    )}
+                  >
+                    {message.role === "user" ? "你：" : "AI："}
+                  </span>
+                  <span className="ml-2">{message.content}</span>
+                </div>
+                <p
                   className={cn(
-                    "font-medium",
+                    "text-xs mt-1 opacity-50",
                     effectiveTheme === "dark"
-                      ? "text-gray-300"
-                      : "text-gray-600"
+                      ? "text-gray-400"
+                      : "text-gray-500"
                   )}
                 >
-                  AI：
-                </span>
-                <span className="ml-2 inline-flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-current rounded-full animate-bounce opacity-60"></div>
-                  <div
-                    className="w-2 h-2 bg-current rounded-full animate-bounce opacity-60"
-                    style={{ animationDelay: "0.1s" }}
-                  ></div>
-                  <div
-                    className="w-2 h-2 bg-current rounded-full animate-bounce opacity-60"
-                    style={{ animationDelay: "0.2s" }}
-                  ></div>
-                </span>
+                  {formatTime(new Date())}
+                </p>
               </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-      )}
+            ))}
 
-      {/* 下方：输入区域 - 加宽和下移 */}
-      <div className="flex items-center justify-center mt-12">
-        <form onSubmit={onSubmit} className="flex items-center gap-4">
+            {isLoading && (
+              <div className="w-full">
+                <div
+                  className={cn(
+                    "text-base leading-relaxed",
+                    effectiveTheme === "dark" ? "text-white" : "text-gray-800"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "font-medium",
+                      effectiveTheme === "dark"
+                        ? "text-gray-300"
+                        : "text-gray-600"
+                    )}
+                  >
+                    AI：
+                  </span>
+                  <span className="ml-2 inline-flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-current rounded-full animate-bounce opacity-60"></div>
+                    <div
+                      className="w-2 h-2 bg-current rounded-full animate-bounce opacity-60"
+                      style={{ animationDelay: "0.1s" }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-current rounded-full animate-bounce opacity-60"
+                      style={{ animationDelay: "0.2s" }}
+                    ></div>
+                  </span>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+        )}
+      </div>
+
+      {/* 输入框 - 固定在底部，添加底部边距 */}
+      <div className="flex-shrink-0 pb-32">
+        <form
+          onSubmit={onSubmit}
+          className="flex items-center justify-center gap-8"
+        >
           {/* 长胶囊输入框 - 加宽 */}
           <input
             ref={inputRef}
@@ -706,7 +744,7 @@ const Chatbot: React.FC<ChatbotProps> = ({
               borderWidth: "1px",
               color: effectiveTheme === "dark" ? "white" : "#1F2937",
               transition: "all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-              transform: `scale(${inputScale})`, // 应用动画缩放
+              transform: `scale(${inputScale})`,
               transformOrigin: "center",
               boxShadow:
                 effectiveTheme === "dark"
@@ -715,33 +753,29 @@ const Chatbot: React.FC<ChatbotProps> = ({
             }}
           />
 
-          {/* 圆形发送按钮 - 修复颜色和图标 */}
+          {/* 圆形发送按钮 */}
           {showSendButton && (
             <button
               type="submit"
               disabled={!input?.trim() || isLoading || turnCount >= maxTurns}
-              data-chatbot-button="true" // 用于动画检测的标识
+              data-chatbot-button="true"
               className={cn(
                 "w-14 h-14 rounded-full",
-                "backdrop-blur-md", // 添加高斯模糊
+                "backdrop-blur-md",
                 "flex items-center justify-center",
-                // 图标颜色：确保在对应背景上清晰可见
-                effectiveTheme === "dark"
-                  ? "text-gray-800" // 夜间：深色图标（在白色背景上）
-                  : "text-white" // 日间：白色图标（在深色背景上）
+                effectiveTheme === "dark" ? "text-gray-800" : "text-white"
               )}
               style={{
-                // 使用与其他控件一致的颜色
                 backgroundColor:
                   effectiveTheme === "dark"
-                    ? "rgba(255, 255, 255, 0.7)" // 夜间：半透明白色
-                    : "rgba(31, 41, 55, 0.9)", // 日间：降低透明度的深色（#1F2937 的 rgba 版本）
+                    ? "rgba(255, 255, 255, 0.7)"
+                    : "rgba(31, 41, 55, 0.9)",
                 border: "none",
                 opacity: 1,
                 boxShadow: "none",
-                transform: `scale(${buttonScale})`, // 应用动画缩放
+                transform: `scale(${buttonScale})`,
                 transformOrigin: "center",
-                transition: "transform 0.1s ease-out", // 平滑的变换过渡
+                transition: "transform 0.1s ease-out",
               }}
             >
               <ArrowUp size={18} />
