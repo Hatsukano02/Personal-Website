@@ -1,0 +1,26 @@
+/* RAG响应内容样式 */
+.ragContent {
+  text-align: justify;
+  text-justify: inter-ideograph;
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+/* 所有段落首行缩进和间距 */
+.ragContent p {
+  text-indent: 2em;
+  margin-bottom: 1.2em;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .ragContent {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  
+  .ragContent p {
+    text-indent: 1.5em;
+    margin-bottom: 1em;
+  }
+}

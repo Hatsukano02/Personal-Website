@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils/cn";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import TextFloatAnimation from "@/components/animations/TextFloatAnimation/TextFloatAnimation";
 import { ChatbotProps } from "./Chatbot.types";
+import styles from "./Chatbot.module.css";
 
 // 扩展 HTMLElement 类型以包含鼠标移动清理函数
 interface HTMLElementWithCleanup extends HTMLElement {
@@ -42,18 +43,16 @@ const THEME_CARDS = [
 
 const Chatbot: React.FC<ChatbotProps> = ({
   showSendButton = true,
-  ephemeralMode = true,
   maxTurns = 3,
   onTitleMove,
 }) => {
   const { effectiveTheme } = useTheme();
 
-  // 临时简化版本 - 不使用AI SDK的useChat
-  const [messages, setMessages] = useState<
-    Array<{ id: string; role: string; content: string }>
-  >([]);
+  // 简化版本 - 只存储和显示RAG Bot响应
+  const [currentResponse, setCurrentResponse] = useState<string>(""); // 当前显示的RAG响应
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false); // 是否正在过渡
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -63,39 +62,66 @@ const Chatbot: React.FC<ChatbotProps> = ({
     e.preventDefault();
     if (!input.trim()) return;
 
-    const userMessage = {
-      id: Date.now().toString(),
-      role: "user",
-      content: input,
-    };
-    setMessages((prev) => [...prev, userMessage]);
     setInput("");
-    setIsLoading(true);
 
-    // 模拟AI响应
-    setTimeout(() => {
-      const aiMessage = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: `感谢你的问题："${userMessage.content}"。这是一个模拟回复，实际的AI集成将在后续完成。`,
-      };
-      setMessages((prev) => [...prev, aiMessage]);
-      setIsLoading(false);
-    }, 1000);
+    // 如果已有响应内容，先触发渐隐动画
+    if (currentResponse) {
+      setIsTransitioning(true);
+      
+      // 使用 requestAnimationFrame 确保状态更新分离，触发CSS过渡
+      requestAnimationFrame(() => {
+        setCurrentResponse(""); // 清空当前内容，触发渐隐
+      });
+      
+      // 等待渐隐动画完成后再开始加载新内容
+      setTimeout(() => {
+        setIsTransitioning(false);
+        setIsLoading(true);
+        
+        // 模拟AI响应
+        setTimeout(() => {
+          const mockResponse = `这是基于你的问题生成的 RAG 响应内容。实际集成后，这里将显示基于个人知识库检索增强的回答。
+
+内容会根据中英文自动调整格式：中文段落首行缩进两格，英文按照标准格式显示。整体内容居中展示，文字左右对齐，确保阅读体验的舒适性。
+
+系统会根据用户的问题，从个人知识库中检索相关信息，然后生成准确、有用的回答。这种方式既保证了回答的个性化，又确保了信息的准确性。
+
+This is how English content would be displayed with proper formatting and alignment. English paragraphs follow standard formatting conventions without indentation.
+
+The system ensures optimal readability across different languages and content types.`;
+          
+          setCurrentResponse(mockResponse);
+          setIsLoading(false);
+        }, 1000);
+      }, 500); // 等待渐隐动画完成
+    } else {
+      // 如果没有现有内容，直接开始加载
+      setIsLoading(true);
+      
+      // 模拟AI响应
+      setTimeout(() => {
+        const mockResponse = `这是基于你的问题生成的 RAG 响应内容。实际集成后，这里将显示基于个人知识库检索增强的回答。
+
+内容会根据中英文自动调整格式：中文段落首行缩进两格，英文按照标准格式显示。整体内容居中展示，文字左右对齐，确保阅读体验的舒适性。
+
+系统会根据用户的问题，从个人知识库中检索相关信息，然后生成准确、有用的回答。这种方式既保证了回答的个性化，又确保了信息的准确性。
+
+This is how English content would be displayed with proper formatting and alignment. English paragraphs follow standard formatting conventions without indentation.
+
+The system ensures optimal readability across different languages and content types.`;
+        
+        setCurrentResponse(mockResponse);
+        setIsLoading(false);
+      }, 1000);
+    }
   };
 
-  const reload = useCallback(() => {
-    setMessages([]);
-    setInput("");
-    setTurnCount(0);
-  }, []);
 
   // 状态管理
   const [isFocused, setIsFocused] = useState(false); // 输入框是否获得焦点
   const [turnCount, setTurnCount] = useState(0);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // 鼠标响应动画 refs
@@ -210,11 +236,7 @@ const Chatbot: React.FC<ChatbotProps> = ({
     const question = `跟我聊聊你的${card.title}相关内容`;
 
     // 模拟用户输入
-    const syntheticEvent = {
-      target: { value: question },
-    } as React.ChangeEvent<HTMLInputElement>;
-
-    handleInputChange(syntheticEvent);
+    setInput(question);
 
     // 处理卡片退出和标题移动
     if (!isFocused && cardsVisible) {
@@ -232,9 +254,15 @@ const Chatbot: React.FC<ChatbotProps> = ({
     setTimeout(() => {
       if (turnCount < maxTurns) {
         setTurnCount((prev) => prev + 1);
-        handleSubmit(
-          new Event("submit") as unknown as React.FormEvent<HTMLFormElement>
-        );
+        
+        // 创建一个合成的表单事件
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        Object.defineProperty(submitEvent, 'preventDefault', {
+          value: () => {},
+          writable: true
+        });
+        
+        handleSubmit(submitEvent as unknown as React.FormEvent<HTMLFormElement>);
       }
     }, 100);
   };
@@ -303,33 +331,6 @@ const Chatbot: React.FC<ChatbotProps> = ({
     }
   };
 
-  // 滚动到底部 - 使用容器滚动而不是页面滚动，延迟执行避免布局跳动
-  useEffect(() => {
-    if (messages.length > 0) {
-      // 使用 setTimeout 确保 DOM 更新完成后再滚动
-      const timer = setTimeout(() => {
-        if (messagesContainerRef.current) {
-          messagesContainerRef.current.scrollTop =
-            messagesContainerRef.current.scrollHeight;
-        }
-      }, 150); // 增加延迟确保容器完全渲染
-
-      return () => clearTimeout(timer);
-    }
-  }, [messages]);
-
-  // 阅后即焚逻辑
-  useEffect(() => {
-    if (messages.length > 0 && ephemeralMode) {
-      const timer = setTimeout(() => {
-        reload();
-        setTurnCount(0);
-        setIsFocused(false);
-      }, 30000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [messages, ephemeralMode, reload]);
 
   // 全局鼠标移动监听 - 为输入框和按钮添加响应动画
   useEffect(() => {
@@ -528,13 +529,6 @@ const Chatbot: React.FC<ChatbotProps> = ({
     };
   }, []);
 
-  // 格式化时间
-  const formatTime = (timestamp: Date) => {
-    return timestamp.toLocaleTimeString("zh-CN", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
 
   return (
     <div className="w-full max-w-6xl mx-auto relative flex flex-col h-[68vh]">
@@ -626,94 +620,46 @@ const Chatbot: React.FC<ChatbotProps> = ({
         </div>
       </div>
 
-      {/* 对话消息区域 - 始终占据可用空间 */}
+      {/* RAG响应内容区域 - 始终占据可用空间 */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto mb-6"
-        style={{
-          scrollBehavior: "smooth",
-        }}
+        className="flex-1 flex items-center justify-center mb-6 px-8"
       >
-        {messages.length > 0 && (
-          <div className="space-y-4">
-            {messages.map((message) => (
-              <div key={message.id} className="w-full">
-                <div
-                  className={cn(
-                    "text-base leading-relaxed",
-                    effectiveTheme === "dark" ? "text-white" : "text-gray-800"
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "font-medium",
-                      message.role === "user"
-                        ? "text-blue-500"
-                        : effectiveTheme === "dark"
-                        ? "text-gray-300"
-                        : "text-gray-600"
-                    )}
-                  >
-                    {message.role === "user" ? "你：" : "AI："}
-                  </span>
-                  <span className="ml-2">
-                    {message.role === "assistant" ? (
-                      <TextFloatAnimation
-                        text={message.content}
-                        preset="typewriter"
-                        autoStart={true}
-                      />
-                    ) : (
-                      message.content
-                    )}
-                  </span>
-                </div>
-                <p
-                  className={cn(
-                    "text-xs mt-1 opacity-50",
-                    effectiveTheme === "dark"
-                      ? "text-gray-400"
-                      : "text-gray-500"
-                  )}
-                >
-                  {formatTime(new Date())}
-                </p>
-              </div>
-            ))}
-
-            {isLoading && (
-              <div className="w-full">
-                <div
-                  className={cn(
-                    "text-base leading-relaxed",
-                    effectiveTheme === "dark" ? "text-white" : "text-gray-800"
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "font-medium",
-                      effectiveTheme === "dark"
-                        ? "text-gray-300"
-                        : "text-gray-600"
-                    )}
-                  >
-                    AI：
-                  </span>
-                  <span className="ml-2 inline-flex items-center space-x-1">
-                    <div className="w-2 h-2 bg-current rounded-full animate-bounce opacity-60"></div>
-                    <div
-                      className="w-2 h-2 bg-current rounded-full animate-bounce opacity-60"
-                      style={{ animationDelay: "0.1s" }}
-                    ></div>
-                    <div
-                      className="w-2 h-2 bg-current rounded-full animate-bounce opacity-60"
-                      style={{ animationDelay: "0.2s" }}
-                    ></div>
-                  </span>
-                </div>
-              </div>
+        {currentResponse && (
+          <div 
+            className={cn(
+              "max-w-4xl w-full transition-all duration-500 ease-in-out",
+              currentResponse && !isTransitioning
+                ? "opacity-100 transform translate-y-0" 
+                : "opacity-0 transform -translate-y-4"
             )}
-            <div ref={messagesEndRef} />
+          >
+            <div
+              className={cn(
+                styles.ragContent,
+                effectiveTheme === "dark" ? "text-white" : "text-gray-800"
+              )}
+            >
+              <TextFloatAnimation
+                text={currentResponse}
+                preset="typewriter"
+                autoStart={true}
+              />
+            </div>
+          </div>
+        )}
+
+        {isLoading && (
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-current rounded-full animate-bounce opacity-60"></div>
+            <div
+              className="w-3 h-3 bg-current rounded-full animate-bounce opacity-60"
+              style={{ animationDelay: "0.15s" }}
+            ></div>
+            <div
+              className="w-3 h-3 bg-current rounded-full animate-bounce opacity-60"
+              style={{ animationDelay: "0.3s" }}
+            ></div>
           </div>
         )}
       </div>
