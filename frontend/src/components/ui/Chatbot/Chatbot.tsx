@@ -623,7 +623,7 @@ The system ensures optimal readability across different languages and content ty
       {/* RAG响应内容区域 - 始终占据可用空间 */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 flex items-center justify-center mb-6 px-8"
+        className="flex-1 flex items-start justify-center mb-6 px-8"
       >
         {currentResponse && (
           <div 
@@ -634,17 +634,29 @@ The system ensures optimal readability across different languages and content ty
                 : "opacity-0 transform -translate-y-4"
             )}
           >
-            <div
+            <div 
               className={cn(
-                styles.ragContent,
-                effectiveTheme === "dark" ? "text-white" : "text-gray-800"
+                "max-h-full overflow-y-scroll py-4",
+                styles.scrollContainer,
+                effectiveTheme === "dark" ? styles.scrollContainerDark : ""
               )}
+              style={{ 
+                contain: 'layout style',
+                willChange: 'auto'
+              }}
             >
-              <TextFloatAnimation
-                text={currentResponse}
-                preset="typewriter"
-                autoStart={true}
-              />
+              <div
+                className={cn(
+                  styles.ragContent,
+                  effectiveTheme === "dark" ? "text-white" : "text-gray-800"
+                )}
+              >
+                <TextFloatAnimation
+                  text={currentResponse}
+                  preset="typewriter"
+                  autoStart={true}
+                />
+              </div>
             </div>
           </div>
         )}
