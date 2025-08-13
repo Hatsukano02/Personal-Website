@@ -48,36 +48,52 @@ const Chatbot: React.FC<ChatbotProps> = ({
 }) => {
   const { effectiveTheme } = useTheme();
 
-  // 简化版本 - 只存储和显示RAG Bot响应
-  const [currentResponse, setCurrentResponse] = useState<string>(""); // 当前显示的RAG响应
+  // 更简洁的状态管理
+  const [currentResponse, setCurrentResponse] = useState<string>(""); // 当前响应内容
+  const [fadingResponse, setFadingResponse] = useState<string>(""); // 渐隐期间显示的内容
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false); // 是否正在过渡
+  const [animationPhase, setAnimationPhase] = useState<
+    "idle" | "fadeOut" | "loading" | "fadeIn"
+  >("idle"); // 动画阶段
+  const [responseKey, setResponseKey] = useState(0); // 用于强制重新渲染 TextFloatAnimation
+  const [isFadingOut, setIsFadingOut] = useState(false); // 控制渐隐动画的实际触发
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
 
+  // 处理渐隐动画时序
+  useEffect(() => {
+    if (animationPhase === "fadeOut") {
+      // 小延迟确保DOM更新后再触发动画
+      const timer = setTimeout(() => {
+        setIsFadingOut(true);
+      }, 10);
+      return () => clearTimeout(timer);
+    } else {
+      setIsFadingOut(false);
+    }
+  }, [animationPhase]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading || animationPhase !== "idle") return;
 
     setInput("");
 
     // 如果已有响应内容，先触发渐隐动画
     if (currentResponse) {
-      setIsTransitioning(true);
-      
-      // 使用 requestAnimationFrame 确保状态更新分离，触发CSS过渡
-      requestAnimationFrame(() => {
-        setCurrentResponse(""); // 清空当前内容，触发渐隐
-      });
-      
-      // 等待渐隐动画完成后再开始加载新内容
+      setFadingResponse(currentResponse); // 保存当前内容用于渐隐
+      setCurrentResponse(""); // 立即清空当前内容
+      setAnimationPhase("fadeOut");
+
+      // 等待渐隐动画完成后开始加载
       setTimeout(() => {
-        setIsTransitioning(false);
+        setFadingResponse(""); // 清空渐隐内容
+        setAnimationPhase("loading");
         setIsLoading(true);
-        
+
         // 模拟AI响应
         setTimeout(() => {
           const mockResponse = `这是基于你的问题生成的 RAG 响应内容。实际集成后，这里将显示基于个人知识库检索增强的回答。
@@ -89,15 +105,22 @@ const Chatbot: React.FC<ChatbotProps> = ({
 This is how English content would be displayed with proper formatting and alignment. English paragraphs follow standard formatting conventions without indentation.
 
 The system ensures optimal readability across different languages and content types.`;
-          
+
           setCurrentResponse(mockResponse);
           setIsLoading(false);
+          setAnimationPhase("fadeIn");
+          setResponseKey((prev) => prev + 1); // 强制重新渲染
+
+          // 动画完成后重置为空闲状态
+          setTimeout(() => {
+            setAnimationPhase("idle");
+          }, 100);
         }, 1000);
       }, 500); // 等待渐隐动画完成
     } else {
-      // 如果没有现有内容，直接开始加载
+      setAnimationPhase("loading");
       setIsLoading(true);
-      
+
       // 模拟AI响应
       setTimeout(() => {
         const mockResponse = `这是基于你的问题生成的 RAG 响应内容。实际集成后，这里将显示基于个人知识库检索增强的回答。
@@ -109,13 +132,19 @@ The system ensures optimal readability across different languages and content ty
 This is how English content would be displayed with proper formatting and alignment. English paragraphs follow standard formatting conventions without indentation.
 
 The system ensures optimal readability across different languages and content types.`;
-        
+
         setCurrentResponse(mockResponse);
         setIsLoading(false);
+        setAnimationPhase("fadeIn");
+        setResponseKey((prev) => prev + 1);
+
+        // 动画完成后重置为空闲状态
+        setTimeout(() => {
+          setAnimationPhase("idle");
+        }, 100);
       }, 1000);
     }
   };
-
 
   // 状态管理
   const [isFocused, setIsFocused] = useState(false); // 输入框是否获得焦点
@@ -171,7 +200,7 @@ The system ensures optimal readability across different languages and content ty
       return;
     }
 
-    if (input?.trim() && !isLoading) {
+    if (input?.trim() && !isLoading && animationPhase === "idle") {
       setTurnCount((prev) => prev + 1);
       handleSubmit(e);
     }
@@ -252,17 +281,22 @@ The system ensures optimal readability across different languages and content ty
 
     // 延迟提交
     setTimeout(() => {
-      if (turnCount < maxTurns) {
+      if (turnCount < maxTurns && animationPhase === "idle") {
         setTurnCount((prev) => prev + 1);
-        
+
         // 创建一个合成的表单事件
-        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-        Object.defineProperty(submitEvent, 'preventDefault', {
-          value: () => {},
-          writable: true
+        const submitEvent = new Event("submit", {
+          bubbles: true,
+          cancelable: true,
         });
-        
-        handleSubmit(submitEvent as unknown as React.FormEvent<HTMLFormElement>);
+        Object.defineProperty(submitEvent, "preventDefault", {
+          value: () => {},
+          writable: true,
+        });
+
+        handleSubmit(
+          submitEvent as unknown as React.FormEvent<HTMLFormElement>
+        );
       }
     }, 100);
   };
@@ -330,7 +364,6 @@ The system ensures optimal readability across different languages and content ty
       animationFrameRef.current = requestAnimationFrame(updateCardScales);
     }
   };
-
 
   // 全局鼠标移动监听 - 为输入框和按钮添加响应动画
   useEffect(() => {
@@ -529,7 +562,6 @@ The system ensures optimal readability across different languages and content ty
     };
   }, []);
 
-
   return (
     <div className="w-full max-w-6xl mx-auto relative flex flex-col h-[68vh]">
       {/* 上方：四个主题卡片区域 */}
@@ -625,24 +657,27 @@ The system ensures optimal readability across different languages and content ty
         ref={messagesContainerRef}
         className="flex-1 flex items-start justify-center mb-6 px-8"
       >
-        {currentResponse && (
-          <div 
-            className={cn(
-              "max-w-4xl w-full transition-all duration-500 ease-in-out",
-              currentResponse && !isTransitioning
-                ? "opacity-100 transform translate-y-0" 
-                : "opacity-0 transform -translate-y-4"
-            )}
+        {/* 渐隐阶段：显示正在淡出的旧内容 */}
+        {animationPhase === "fadeOut" && fadingResponse && (
+          <div
+            className="max-w-4xl w-full"
+            style={{
+              transition: "opacity 500ms ease-in-out, filter 500ms ease-in-out",
+              opacity: isFadingOut ? 0 : 1,
+              filter: isFadingOut ? "blur(4px)" : "blur(0px)",
+              width: "100%", // 保持宽度不变
+              minHeight: "1em", // 保持最小高度防止布局跳跃
+            }}
           >
-            <div 
+            <div
               className={cn(
                 "max-h-full overflow-y-scroll py-4",
                 styles.scrollContainer,
                 effectiveTheme === "dark" ? styles.scrollContainerDark : ""
               )}
-              style={{ 
-                contain: 'layout style',
-                willChange: 'auto'
+              style={{
+                contain: "layout style",
+                willChange: "auto",
               }}
             >
               <div
@@ -651,17 +686,64 @@ The system ensures optimal readability across different languages and content ty
                   effectiveTheme === "dark" ? "text-white" : "text-gray-800"
                 )}
               >
-                <TextFloatAnimation
-                  text={currentResponse}
-                  preset="typewriter"
-                  autoStart={true}
-                />
+                {/* 渐隐期间使用普通div，保持已渲染状态 */}
+                <div
+                  style={{
+                    whiteSpace: "pre-wrap",
+                    width: "100%", // 确保宽度一致
+                    boxSizing: "border-box", // 包含padding和border
+                    wordBreak: "break-word", // 防止长单词造成布局变化
+                    overflow: "hidden", // 防止动画过程中的布局溢出
+                    textAlign: "left", // 覆盖justify对齐，避免重新计算
+                    textJustify: "none", // 禁用两端对齐，保持固定布局
+                    pointerEvents: "none", // 禁用交互，避免布局重计算
+                  }}
+                >
+                  {fadingResponse}
+                </div>
               </div>
             </div>
           </div>
         )}
 
-        {isLoading && (
+        {/* 正常显示：新内容或现有内容 */}
+        {(animationPhase === "fadeIn" || animationPhase === "idle") &&
+          currentResponse && (
+            <div
+              className={cn(
+                "max-w-4xl w-full transition-all duration-500 ease-in-out",
+                "opacity-100 translate-y-0"
+              )}
+            >
+              <div
+                className={cn(
+                  "max-h-full overflow-y-scroll py-4",
+                  styles.scrollContainer,
+                  effectiveTheme === "dark" ? styles.scrollContainerDark : ""
+                )}
+                style={{
+                  contain: "layout style",
+                  willChange: "auto",
+                }}
+              >
+                <div
+                  className={cn(
+                    styles.ragContent,
+                    effectiveTheme === "dark" ? "text-white" : "text-gray-800"
+                  )}
+                >
+                  <TextFloatAnimation
+                    key={responseKey} // 强制重新渲染
+                    text={currentResponse}
+                    preset="typewriter"
+                    autoStart={animationPhase === "fadeIn"}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+        {animationPhase === "loading" && isLoading && (
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-current rounded-full animate-bounce opacity-60"></div>
             <div
@@ -695,7 +777,9 @@ The system ensures optimal readability across different languages and content ty
                 ? "已达到最大对话轮数"
                 : `随便问问你想了解我的任何事`
             }
-            disabled={isLoading || turnCount >= maxTurns}
+            disabled={
+              isLoading || turnCount >= maxTurns || animationPhase !== "idle"
+            }
             className={cn(
               "w-96 px-6 py-4 rounded-full backdrop-blur-md border",
               "focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:scale-105",
@@ -726,7 +810,12 @@ The system ensures optimal readability across different languages and content ty
           {showSendButton && (
             <button
               type="submit"
-              disabled={!input?.trim() || isLoading || turnCount >= maxTurns}
+              disabled={
+                !input?.trim() ||
+                isLoading ||
+                turnCount >= maxTurns ||
+                animationPhase !== "idle"
+              }
               data-chatbot-button="true"
               className={cn(
                 "w-14 h-14 rounded-full",
