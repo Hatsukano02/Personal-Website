@@ -46,15 +46,42 @@
   background-color: rgba(255, 255, 255, 0.5);
 }
 
+/* 渐隐文本容器特殊样式 - 完全复制 TextFloatAnimation 的布局 */
+.textFloatAnimationMimic {
+  display: inline-block;
+  /* 复制 ragContent 的文本样式 */
+  text-align: justify;
+  text-justify: inter-ideograph;
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+/* 渐隐文本的字符样式 - 复制 TextFloatAnimation 的字符布局 */
+.textFloatAnimationMimic span {
+  display: inline-block;
+  contain: layout;
+}
+
+/* 空格字符处理 - 复制 TextFloatAnimation */
+.textFloatAnimationMimic .space {
+  width: 0.3em;
+}
+
 /* 响应式调整 */
 @media (max-width: 768px) {
   .ragContent {
     font-size: 14px;
     line-height: 1.7;
   }
-  
+
   .ragContent p {
     text-indent: 1.5em;
     margin-bottom: 1em;
+  }
+
+  /* 渐隐文本容器也需要响应式 */
+  .textFloatAnimationMimic {
+    font-size: 14px;
+    line-height: 1.7;
   }
 }

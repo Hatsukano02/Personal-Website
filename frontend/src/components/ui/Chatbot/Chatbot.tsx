@@ -84,7 +84,12 @@ const Chatbot: React.FC<ChatbotProps> = ({
 
     // 如果已有响应内容，先触发渐隐动画
     if (currentResponse) {
-      setFadingResponse(currentResponse); // 保存当前内容用于渐隐
+      // 规范化文本格式，避免多余的空行
+      const normalizedResponse = currentResponse
+        .replace(/\n{3,}/g, "\n\n") // 将3个或更多连续换行替换为2个
+        .trim(); // 去除首尾空白
+
+      setFadingResponse(normalizedResponse); // 保存规范化后的内容用于渐隐
       setCurrentResponse(""); // 立即清空当前内容
       setAnimationPhase("fadeOut");
 
@@ -686,20 +691,19 @@ The system ensures optimal readability across different languages and content ty
                   effectiveTheme === "dark" ? "text-white" : "text-gray-800"
                 )}
               >
-                {/* 渐隐期间使用普通div，保持已渲染状态 */}
-                <div
-                  style={{
-                    whiteSpace: "pre-wrap",
-                    width: "100%", // 确保宽度一致
-                    boxSizing: "border-box", // 包含padding和border
-                    wordBreak: "break-word", // 防止长单词造成布局变化
-                    overflow: "hidden", // 防止动画过程中的布局溢出
-                    textAlign: "left", // 覆盖justify对齐，避免重新计算
-                    textJustify: "none", // 禁用两端对齐，保持固定布局
-                    pointerEvents: "none", // 禁用交互，避免布局重计算
-                  }}
-                >
-                  {fadingResponse}
+                {/* 渐隐期间复制 TextFloatAnimation 的渲染结构 */}
+                <div className={styles.textFloatAnimationMimic}>
+                  {fadingResponse.split("").map((char, index) => (
+                    <span
+                      key={index}
+                      className={char === " " ? styles.space : ""}
+                      style={{
+                        opacity: 1, // 渐隐时保持完全可见
+                      }}
+                    >
+                      {char === " " ? "\u00A0" : char}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
